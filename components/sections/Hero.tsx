@@ -7,7 +7,7 @@ import { motion } from "framer-motion"
 
 export default function Hero() {
   const [typedText, setTypedText] = useState("")
-  const fullText = "Front-End Developer & Mobile App Creator"
+  const fullText = "Computer Engineering Student & Developer"
 
   useEffect(() => {
     let index = 0
@@ -61,11 +61,6 @@ export default function Hero() {
           animate="visible"
           className="text-center max-w-4xl mx-auto"
         >
-          <motion.div variants={itemVariants} className="mb-6">
-            <span className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4 border border-primary/20">
-              Welcome to my portfolio
-            </span>
-          </motion.div>
 
           <motion.h1
             variants={itemVariants}
@@ -98,16 +93,18 @@ export default function Hero() {
 
           <motion.p
             variants={itemVariants}
-            className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed"
+            className="text-lg md:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed"
           >
-            I create beautiful, responsive web applications and mobile apps with modern technologies. Let's build
-            something amazing together.
+            Passionate Computer Engineering student at{" "}
+            <span className="text-primary font-semibold">Diponegoro University</span>, 
+            specializing in mobile and web development. Bangkit Academy 2024 graduate with 
+            10+ GitHub repositories, building innovative solutions and contributing to the tech community.
           </motion.p>
 
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Button className="group h-12 px-6 text-base" asChild>
               <a href="#projects" className="flex items-center">
-                View My Work
+                View My Projects
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </a>
             </Button>
@@ -117,27 +114,21 @@ export default function Hero() {
                 GitHub
               </a>
             </Button>
-            <Button className="group h-12 px-6 text-base button-secondary" asChild>
-              <a href="/Togar-Anthony-Mario-Sianturi-CV.pdf" download>
-                <Download className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
-                Download CV
-              </a>
-            </Button>
           </motion.div>
 
           {/* Stats */}
           <motion.div variants={itemVariants} className="grid grid-cols-3 gap-8 max-w-md mx-auto mb-12">
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">10+</div>
-              <div className="text-sm text-muted-foreground">Projects</div>
+              <div className="text-sm text-muted-foreground">GitHub Repos</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-primary">2024</div>
+              <div className="text-sm text-muted-foreground">Bangkit Graduate</div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-primary">2+</div>
-              <div className="text-sm text-muted-foreground">Years Experience</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary">5+</div>
-              <div className="text-sm text-muted-foreground">Technologies</div>
+              <div className="text-sm text-muted-foreground">Years Learning</div>
             </div>
           </motion.div>
         </motion.div>
@@ -148,6 +139,7 @@ export default function Hero() {
         animate={{ y: [0, -10, 0] }}
         transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
       >
+        
         <a
           href="#about"
           aria-label="Scroll down"
