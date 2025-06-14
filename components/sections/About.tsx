@@ -88,15 +88,15 @@ export default function About() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <motion.div variants={itemVariants}>
               <h3 className="text-2xl md:text-3xl font-bold mb-6">
-                I'm a passionate frontend developer creating amazing web experiences
+                I'm a passionate Front-End Developer & Mobile App Creator building amazing digital experiences
               </h3>
 
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
                   Hello! I&apos;m Togar Anthony Mario Sianturi, a passionate{" "}
-                  <strong className="text-primary">frontend developer</strong> based in Semarang, Indonesia. I specialize
-                  in creating beautiful, responsive, and user-friendly web applications using modern JavaScript frameworks
-                  and libraries.
+                  <strong className="text-primary">Front-End Developer & Mobile App Creator</strong> based in Semarang, Indonesia. I specialize
+                  in creating beautiful, responsive web applications and innovative mobile apps using modern JavaScript frameworks
+                  and native technologies.
                 </p>
                 <p>
                   I&apos;m a proud graduate of the <strong className="text-primary">Bangkit Academy 2024</strong>, Google&apos;s
@@ -126,7 +126,7 @@ export default function About() {
               </div>
 
               <div className="mt-8">
-                <h4 className="text-xl font-semibold mb-4">Frontend Technologies I use:</h4>
+                <h4 className="text-xl font-semibold mb-4">Technologies I use for Web & Mobile Development:</h4>
                 <div className="flex flex-wrap gap-2">
                   {skills.map((skill, index) => (
                     <motion.div

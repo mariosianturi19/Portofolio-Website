@@ -7,7 +7,7 @@ import { motion } from "framer-motion"
 
 export default function Hero() {
   const [typedText, setTypedText] = useState("")
-  const fullText = "Front-End Developer &s Mobile App Creator"
+  const fullText = "Front-End Developer & Mobile App Creator"
 
   useEffect(() => {
     let index = 0
@@ -66,9 +66,8 @@ export default function Hero() {
             variants={itemVariants}
             className="font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-6 tracking-tight leading-tight"
           >
-            Hi, I'm{" "}
+            Hi, I'm Mario Sianturi{" "}
             <span className="relative">
-              <span className="gradient-text">Mario</span>
               <motion.div
                 className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-blue-500/20 rounded-lg blur-lg"
                 animate={{
