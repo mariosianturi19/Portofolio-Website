@@ -7,7 +7,7 @@ import { motion } from "framer-motion"
 
 export default function Hero() {
   const [typedText, setTypedText] = useState("")
-  const fullText = "Computer Engineering Student & Developer"
+  const fullText = "Front-End Developer &s Mobile App Creator"
 
   useEffect(() => {
     let index = 0
