@@ -82,6 +82,20 @@
   html {
     scroll-behavior: smooth;
   }
+
+  /* Focus visible for accessibility */
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary ring-2 ring-primary ring-offset-2;
+  }
+
+  /* Skip to main content link */
+  .skip-to-main {
+    @apply absolute -top-10 left-0 bg-primary text-primary-foreground px-4 py-2 z-[100] transition-all;
+  }
+
+  .skip-to-main:focus {
+    @apply top-0;
+  }
 }
 
 /* Customize scrollbar */
@@ -241,4 +255,73 @@
 
 .button-secondary {
   @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+}
+
+/* Print Styles */
+@media print {
+  /* Hide non-essential elements */
+  header,
+  nav,
+  .no-print,
+  button,
+  [role="button"],
+  .print-hidden {
+    display: none !important;
+  }
+
+  /* Reset colors for better print */
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Ensure body fits page */
+  body {
+    margin: 0;
+    padding: 1cm;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  /* Page breaks */
+  section {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Links */
+  a {
+    text-decoration: underline;
+  }
+
+  a[href^="http"]:after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+    font-style: italic;
+  }
+
+  /* Images */
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  /* Remove animations */
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Optimize spacing */
+  .container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
 }

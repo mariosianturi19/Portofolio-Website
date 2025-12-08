@@ -46,7 +46,7 @@ export default function Hero() {
   }
 
   return (
-    <section id="home" className="min-h-screen flex flex-col justify-center items-center relative overflow-hidden">
+    <section id="home" className="min-h-screen flex flex-col justify-center items-center relative overflow-hidden pt-32 md:pt-40">
       {/* Background Effects */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>

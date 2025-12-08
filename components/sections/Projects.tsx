@@ -41,8 +41,7 @@ const projects: Project[] = [
     id: 2,
     title: "SIGAP UNDIP",
     description: "SIGAP UNDIP is an innovative digital platform designed to enhance emergency response and safety systems within Diponegoro University environment.",
-    image:
-      "https://images.unsplash.com/photo-1587745416684-47953f16f02f?auto=format&fit=crop&w=800&h=600&q=80",
+    image: "/Emergency.png",
     tags: ["Next.js", "TypeScript", "React", "CSS"],
     github: "https://github.com/mariosianturi19/SIGAP-UNDIP",
     category: "Web",
