@@ -2,7 +2,10 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { LanguageProvider } from '@/components/LanguageProvider';
 import Navbar from '@/components/Navbar';
+import ScrollProgress from '@/components/ScrollProgress';
+import BackToTop from '@/components/BackToTop';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,14 +22,23 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
+        <a href="#main-content" className="skip-to-main">
+          Skip to main content
+        </a>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          {children}
+          <LanguageProvider>
+            <ScrollProgress />
+            <BackToTop />
+            <Navbar />
+            <main id="main-content" role="main" aria-label="Main content">
+              {children}
+            </main>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

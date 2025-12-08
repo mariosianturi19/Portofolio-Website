@@ -1,9 +1,23 @@
 "use client"
 
-import { Github, Linkedin, Mail, ArrowUp } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Github, Linkedin, Mail, ArrowUp, Eye } from "lucide-react"
 import { motion } from "framer-motion"
 
 export default function Footer() {
+  const [visitorCount, setVisitorCount] = useState(0)
+
+  useEffect(() => {
+    // Get visitor count from localStorage
+    const storedCount = localStorage.getItem('portfolioVisitorCount')
+    const count = storedCount ? parseInt(storedCount) : 0
+    
+    // Increment visitor count (simple implementation)
+    const newCount = count + 1
+    localStorage.setItem('portfolioVisitorCount', newCount.toString())
+    setVisitorCount(newCount)
+  }, [])
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
@@ -93,6 +107,12 @@ export default function Footer() {
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
+          <div className="flex items-center justify-center gap-4 mb-2">
+            <div className="flex items-center gap-2 text-sm">
+              <Eye className="h-4 w-4" />
+              <span>{visitorCount.toLocaleString()} visits</span>
+            </div>
+          </div>
           <p className="flex items-center justify-center gap-2 text-sm">
             © {currentYear} Togar Anthony Mario Sianturi. All rights reserved.
           </p>

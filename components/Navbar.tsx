@@ -2,24 +2,27 @@
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Github, Linkedin, Menu, X } from "lucide-react"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Github, Linkedin, Menu, Globe } from "lucide-react"
 import { cn } from "@/lib/utils"
 import ThemeToggle from "@/components/ThemeToggle"
-import { motion, AnimatePresence } from "framer-motion"
-
-const navLinks = [
-  { name: "Home", href: "#home" },
-  { name: "About", href: "#about" },
-  { name: "Projects", href: "#projects" },
-  { name: "Skills", href: "#skills" },
-  { name: "Experience", href: "#experience" },
-  { name: "Contact", href: "#contact" },
-]
+import { motion } from "framer-motion"
+import { useLanguage } from "@/components/LanguageProvider"
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
+  const { language, setLanguage, t } = useLanguage()
+
+  const navLinks = [
+    { name: t.nav.home, href: "#home" },
+    { name: t.nav.about, href: "#about" },
+    { name: t.nav.projects, href: "#projects" },
+    { name: t.nav.skills, href: "#skills" },
+    { name: t.nav.experience, href: "#experience" },
+    { name: t.nav.contact, href: "#contact" },
+  ]
 
   useEffect(() => {
     const handleScroll = () => {
@@ -113,6 +116,17 @@ export default function Navbar() {
             <span className="sr-only">LinkedIn</span>
           </motion.a>
           <ThemeToggle />
+          <motion.button
+            onClick={() => setLanguage(language === "en" ? "id" : "en")}
+            className="flex items-center gap-1 p-2 rounded-lg hover:bg-primary/10 transition-colors text-muted-foreground hover:text-foreground"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label="Toggle language"
+            title={`Switch to ${language === "en" ? "Bahasa Indonesia" : "English"}`}
+          >
+            <Globe className="h-5 w-5" />
+            <span className="text-xs font-medium">{language === "en" ? "EN" : "ID"}</span>
+          </motion.button>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button asChild>
               <a href="#contact">Contact Me</a>
@@ -120,96 +134,56 @@ export default function Navbar() {
           </motion.div>
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <motion.button
-          className="md:hidden p-2"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
-          whileTap={{ scale: 0.9 }}
-        >
-          <AnimatePresence mode="wait">
-            {isOpen ? (
-              <motion.div
-                key="close"
-                initial={{ rotate: 0 }}
-                animate={{ rotate: 180 }}
-                exit={{ rotate: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <X className="h-6 w-6" />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="menu"
-                initial={{ rotate: 180 }}
-                animate={{ rotate: 0 }}
-                exit={{ rotate: 180 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Menu className="h-6 w-6" />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.button>
-      </div>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            className="md:hidden fixed inset-0 bg-background/95 backdrop-blur-lg z-40"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <motion.div
-              className="flex flex-col h-full justify-center items-center space-y-8 p-4"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-            >
-              {navLinks.map((link, index) => (
-                <motion.a
+        {/* Mobile Menu */}
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="md:hidden">
+              <Menu className="h-6 w-6" />
+              <span className="sr-only">Toggle menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+            <div className="flex flex-col h-full justify-center items-center space-y-8 p-4">
+              {navLinks.map((link) => (
+                <a
                   key={link.name}
                   href={link.href}
                   className="text-2xl font-medium hover:text-primary transition-colors"
                   onClick={() => setIsOpen(false)}
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
                 >
                   {link.name}
-                </motion.a>
+                </a>
               ))}
               <div className="flex space-x-6 mt-8">
-                <motion.a
+                <a
                   href="https://github.com/mariosianturi19"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground transition-colors duration-200"
-                  whileHover={{ scale: 1.2, rotate: 10 }}
                 >
                   <Github className="h-6 w-6" />
-                </motion.a>
-                <motion.a
+                </a>
+                <a
                   href="https://www.linkedin.com/in/togar-anthony-mario-sianturi/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground transition-colors duration-200"
-                  whileHover={{ scale: 1.2, rotate: -10 }}
                 >
                   <Linkedin className="h-6 w-6" />
-                </motion.a>
+                </a>
                 <ThemeToggle />
+                <button
+                  onClick={() => setLanguage(language === "en" ? "id" : "en")}
+                  className="flex items-center gap-1 p-2 rounded-lg hover:bg-primary/10 transition-colors text-muted-foreground hover:text-foreground"
+                  aria-label="Toggle language"
+                >
+                  <Globe className="h-6 w-6" />
+                </button>
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
     </motion.header>
   )
 }
