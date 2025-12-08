@@ -41,7 +41,7 @@ const projects: Project[] = [
     id: 2,
     title: "SIGAP UNDIP",
     description: "SIGAP UNDIP is an innovative digital platform designed to enhance emergency response and safety systems within Diponegoro University environment.",
-    image: "/Emergency.png",
+    image: "/SIGAP.png",
     tags: ["Next.js", "TypeScript", "React", "CSS"],
     github: "https://github.com/mariosianturi19/SIGAP-UNDIP",
     category: "Web",
@@ -49,6 +49,56 @@ const projects: Project[] = [
   },
   {
     id: 3,
+    title: "Premier League Info System",
+    description: "Full-stack sports data platform delivering real-time Premier League data. Features a React frontend and robust Next.js API backend.",
+    image: "/Premiere.png",
+    tags: ["Next.js", "React.js", "TypeScript", "Full-Stack"],
+    github: "https://github.com/mariosianturi19/premiere-league-app",
+    category: "Web",
+    featured: true,
+  },
+  {
+    id: 4,
+    title: "GASPOL System",
+    description: "Comprehensive Sales Performance and Credit Simulation platform for Setir Kanan. Streamlines automotive sales with real-time financial calculations and lead management.",
+    image: "/Gaspol.png",
+    tags: ["Next.js", "TypeScript", "PWA", "Responsive Design"],
+    github: "https://github.com/mariosianturi19/Gaspol",
+    category: "Web",
+    featured: true,
+  },
+  {
+    id: 5,
+    title: "MotoMarket",
+    description: "Cutting-edge e-commerce platform for motorcycle enthusiasts. Features intuitive search and exploration of motorcycles with a modern interface.",
+    image: "/MotoMarket.png",
+    tags: ["Vite", "TypeScript", "React.js", "Responsive Design"],
+    github: "https://github.com/mariosianturi19/MotoMarket",
+    category: "Web",
+    featured: true,
+  },
+  {
+    id: 6,
+    title: "MPL ID APP",
+    description: "Esports management dashboard for MPL Indonesia. A PWA for tracking standings, managing team rosters, and monitoring MVP leaderboards.",
+    image: "/MPL.png",
+    tags: ["React.js", "API", "PWA", "JavaScript"],
+    github: "#",
+    category: "Web",
+    featured: true,
+  },
+  {
+    id: 7,
+    title: "Finance Tracker",
+    description: "Feature-rich personal finance management application for tracking expenses, budgeting, and analyzing spending patterns.",
+    image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=800&h=600&q=80",
+    tags: ["Next.js", "TypeScript", "React.js", "Full-Stack"],
+    github: "https://github.com/mariosianturi19/Finance-Tracker",
+    category: "Web",
+    featured: true,
+  },
+  {
+    id: 8,
     title: "NBA App",
     description: "React Native mobile application for NBA statistics and team information with modern UI.",
     image:
@@ -59,7 +109,7 @@ const projects: Project[] = [
     featured: true,
   },
   {
-    id: 4,
+    id: 9,
     title: "Klik Digital Dashboard",
     description: "Professional dashboard website for PT. Klik Digital Sinergi with advanced analytics.",
     image:
@@ -70,7 +120,7 @@ const projects: Project[] = [
     featured: true,
   },
   {
-    id: 5,
+    id: 10,
     title: "Endorsement Website",
     description: "Social media influencer endorsement platform with payment integration and user management.",
     image:
@@ -80,7 +130,7 @@ const projects: Project[] = [
     category: "Web",
   },
   {
-    id: 6,
+    id: 11,
     title: "Basketball Court Booking",
     description: "Online basketball court booking system with real-time availability and payment processing.",
     image:
@@ -90,7 +140,7 @@ const projects: Project[] = [
     category: "Web",
   },
   {
-    id: 7,
+    id: 12,
     title: "Outlet Recognition Website",
     description: "Website for outlet recognition using computer vision and machine learning algorithms.",
     image:
@@ -100,7 +150,7 @@ const projects: Project[] = [
     category: "Web",
   },
   {
-    id: 8,
+    id: 13,
     title: "Interpolation Algorithm",
     description:
       "Python implementation of numerical interpolation algorithms for data science and computational mathematics.",
