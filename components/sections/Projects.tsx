@@ -1,14 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { motion } from "framer-motion"
-import { useInView } from "react-intersection-observer"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { motion, AnimatePresence } from "framer-motion"
+import Tilt from "react-parallax-tilt"
 import { Badge } from "@/components/ui/badge"
-import { Github, Star, Users, Award } from "lucide-react"
+import { Github, Star, Users, Award, ExternalLink, Sparkles } from "lucide-react"
+import { useLanguage } from "@/components/LanguageProvider"
 
-// Define the type for a project
 interface Project {
   id: number
   title: string
@@ -22,14 +20,13 @@ interface Project {
   teamProject?: boolean
 }
 
+// ... (Array projects tetap sama seperti milik Anda)
 const projects: Project[] = [
   {
     id: 1,
     title: "Si-Bantu",
-    description:
-      "Bangkit Capstone 2024 - Smart assistant mobile application for helping people with daily tasks using machine learning and AI technologies.",
-    image:
-      "https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?auto=format&fit=crop&w=800&h=600&q=80",
+    description: "Bangkit Capstone 2024 - Smart assistant mobile application for helping people with daily tasks using machine learning and AI technologies.",
+    image: "https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?auto=format&fit=crop&w=800&h=600&q=80",
     tags: ["Android", "Machine Learning", "TensorFlow", "Kotlin", "Firebase", "AI"],
     github: "https://github.com/indra1222/Bangkitcapstone",
     category: "Mobile",
@@ -101,8 +98,7 @@ const projects: Project[] = [
     id: 8,
     title: "NBA App",
     description: "React Native mobile application for NBA statistics and team information with modern UI.",
-    image:
-      "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&h=600&q=80",
+    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&h=600&q=80",
     tags: ["React Native", "JavaScript", "CSS"],
     github: "https://github.com/mariosianturi19/NBA-App",
     category: "Mobile",
@@ -112,10 +108,9 @@ const projects: Project[] = [
     id: 9,
     title: "Klik Digital Dashboard",
     description: "Professional dashboard website for PT. Klik Digital Sinergi with advanced analytics.",
-    image:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&h=600&q=80",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&h=600&q=80",
     tags: ["Next.js", "TypeScript", "CSS", "JavaScript"],
-    github: "#", // Assuming "#" means no public link or private
+    github: "#",
     category: "Web",
     featured: true,
   },
@@ -123,8 +118,7 @@ const projects: Project[] = [
     id: 10,
     title: "Endorsement Website",
     description: "Social media influencer endorsement platform with payment integration and user management.",
-    image:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&h=600&q=80",
+    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&h=600&q=80",
     tags: ["PHP", "MySQL", "HTML", "CSS", "JavaScript"],
     github: "https://github.com/mariosianturi19/Endorsement_Website",
     category: "Web",
@@ -133,8 +127,7 @@ const projects: Project[] = [
     id: 11,
     title: "Basketball Court Booking",
     description: "Online basketball court booking system with real-time availability and payment processing.",
-    image:
-      "https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?auto=format&fit=crop&w=800&h=600&q=80",
+    image: "https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?auto=format&fit=crop&w=800&h=600&q=80",
     tags: ["PHP", "HTML", "CSS", "JavaScript", "MySQL"],
     github: "https://github.com/mariosianturi19/Booking-Basketball-Court",
     category: "Web",
@@ -143,8 +136,7 @@ const projects: Project[] = [
     id: 12,
     title: "Outlet Recognition Website",
     description: "Website for outlet recognition using computer vision and machine learning algorithms.",
-    image:
-      "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=800&h=600&q=80",
+    image: "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=800&h=600&q=80",
     tags: ["Node.js", "HTML", "CSS", "JavaScript", "Computer Vision"],
     github: "#",
     category: "Web",
@@ -152,10 +144,8 @@ const projects: Project[] = [
   {
     id: 13,
     title: "Interpolation Algorithm",
-    description:
-      "Python implementation of numerical interpolation algorithms for data science and computational mathematics.",
-    image:
-      "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=800&h=600&q=80",
+    description: "Python implementation of numerical interpolation algorithms for data science and computational mathematics.",
+    image: "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=800&h=600&q=80",
     tags: ["Python", "Jupyter", "NumPy", "SciPy", "Mathematics"],
     github: "https://github.com/mariosianturi19/Implementasi-Interpolasi",
     category: "Algorithm",
@@ -165,212 +155,197 @@ const projects: Project[] = [
 type Category = "All" | "Web" | "Mobile" | "Algorithm"
 
 export default function Projects() {
+  const { t } = useLanguage()
   const [filter, setFilter] = useState<Category>("All")
-  const { ref, inView } = useInView({
-    threshold: 0.1,
-    triggerOnce: true,
-  })
 
   const filteredProjects = filter === "All" ? projects : projects.filter((project) => project.category === filter)
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        delayChildren: 0.3,
-        staggerChildren: 0.1,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { y: 50, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut",
-      },
-    },
-  }
+  const categories = [
+    { id: "All", label: t.projects.all },
+    { id: "Web", label: t.projects.web },
+    { id: "Mobile", label: t.projects.mobile },
+    { id: "Algorithm", label: t.projects.algorithm }
+  ]
 
   return (
-    <section id="projects" className="py-16 md:py-24 bg-muted/30">
-      {" "}
-      {/* Assuming section-padding is py-16 md:py-24 */}
-      <div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20">
-        {" "}
-        {/* Assuming container-section is container mx-auto px-4 */}
-        <motion.div ref={ref} variants={containerVariants} initial="hidden" animate={inView ? "visible" : "hidden"}>
-          <motion.div variants={itemVariants} className="text-center mb-16">
-            <span className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
-              My Work
-            </span>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-              <span className="text-primary">02.</span> Featured Projects
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Here are some of the projects I have worked on. Each project represents a unique challenge and showcases
-              different technologies and approaches to problem-solving.
-            </p>
-            <div className="w-24 h-1 bg-gradient-to-r from-primary to-blue-500 mx-auto rounded-full mt-6"></div>
-          </motion.div>
+    <section id="projects" className="py-24 md:py-32 bg-muted/20 relative overflow-hidden">
+      
+      {/* Background Ornaments */}
+      <div className="absolute top-40 left-0 w-full h-[500px] bg-gradient-to-b from-primary/5 to-transparent blur-3xl pointer-events-none -z-10" />
 
-          <motion.div variants={itemVariants} className="flex flex-wrap justify-center gap-2 mb-12">
-            {(["All", "Web", "Mobile", "Algorithm"] as Category[]).map((category) => (
-              <Button
-                key={category}
-                variant={filter === category ? "default" : "outline"}
-                onClick={() => setFilter(category)}
-                className="h-9 px-4 text-sm transition-all duration-300"
+      <div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-center mb-16"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border/50 bg-background/50 backdrop-blur-md text-sm font-medium mb-6">
+            <Sparkles className="h-4 w-4 text-primary" />
+            <span>{t.projects.badge}</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 tracking-tight">
+            {t.projects.title}
+          </h2>
+          <div className="w-20 h-1.5 bg-gradient-to-r from-primary to-blue-500 mx-auto rounded-full mb-8"></div>
+        </motion.div>
+
+        {/* Premium Filter Tabs with Sliding Active Indicator */}
+        <div className="flex flex-wrap justify-center gap-2 mb-16">
+          {categories.map((category) => {
+            const isActive = filter === category.id
+            return (
+              <button
+                key={category.id}
+                onClick={() => setFilter(category.id as Category)}
+                className={`relative px-6 py-2.5 rounded-full text-sm font-medium transition-colors duration-300 ${
+                  isActive ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                }`}
               >
-                {category}
-              </Button>
-            ))}
-          </motion.div>
+                {isActive && (
+                  <motion.div
+                    layoutId="projectFilterIndicator"
+                    className="absolute inset-0 bg-primary rounded-full -z-10 shadow-md"
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10">{category.label}</span>
+              </button>
+            )
+          })}
+        </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto">
+        {/* MASONRY / GRID LAYOUT DENGAN FLUID SHUFFLE */}
+        <motion.div layout className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          <AnimatePresence mode="popLayout">
             {filteredProjects.map((project) => (
               <motion.div
+                layout
                 key={project.id}
-                variants={itemVariants}
-                className={project.featured ? "md:col-span-2 lg:col-span-1" : ""}
+                initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+                transition={{ type: "spring", stiffness: 100, damping: 20 }}
+                className="h-full"
               >
-                <Card className="h-full group overflow-hidden bg-card/50 backdrop-blur-sm border-border/50 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  {" "}
-                  {/* Added card-hover equivalent */}
-                  <div className="relative overflow-hidden">
-                    <div className="aspect-video relative">
+                {/* EFEK 3D TILT PADA KARTU */}
+                <Tilt
+                  tiltMaxAngleX={8}
+                  tiltMaxAngleY={8}
+                  perspective={1000}
+                  scale={1.02}
+                  transitionSpeed={2000}
+                  gyroscope={true}
+                  className="h-full"
+                >
+                  <div className="h-full flex flex-col group overflow-hidden rounded-3xl bg-background/60 backdrop-blur-xl border border-border/50 shadow-xl hover:shadow-primary/10 transition-shadow duration-500">
+                    
+                    {/* Image Container with Hover Effects */}
+                    <div className="relative aspect-video overflow-hidden">
                       <img
                         src={project.image || "/placeholder.svg"}
                         alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-80" />
+                      <div className="absolute inset-0 bg-primary/20 mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                      {project.github !== "#" && (
-                        <div className="absolute inset-0 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <Button
-                            variant="secondary"
-                            className="h-9 px-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white border border-white/30" // Example glass effect
-                            asChild
+                      {/* Floating Badges */}
+                      <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
+                        {project.isCapstone && (
+                          <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-none shadow-lg backdrop-blur-md">
+                            <Award className="h-3 w-3 mr-1" />
+                            Capstone
+                          </Badge>
+                        )}
+                        {project.teamProject && (
+                          <Badge className="bg-blue-500/90 text-white border-none shadow-lg backdrop-blur-md">
+                            <Users className="h-3 w-3 mr-1" />
+                            Team
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="absolute top-4 right-4 z-10">
+                        <Badge variant="outline" className="bg-background/80 backdrop-blur-md border-border/50 text-foreground">
+                          {project.category}
+                        </Badge>
+                      </div>
+                    </div>
+
+                    {/* Content Section */}
+                    <div className="flex flex-col flex-grow p-6 z-20 -mt-6">
+                      <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors duration-300 flex items-start gap-2 mb-3">
+                        {project.title}
+                        {project.featured && (
+                          <Star className="h-4 w-4 text-orange-500 fill-orange-500 flex-shrink-0 mt-1" />
+                        )}
+                      </h3>
+                      
+                      <p className="text-muted-foreground/90 text-sm leading-relaxed mb-6 line-clamp-3 flex-grow">
+                        {project.description}
+                      </p>
+
+                      <div className="flex flex-wrap gap-1.5 mb-6">
+                        {project.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-2.5 py-1 text-xs font-medium rounded-md bg-foreground/5 text-foreground/80 border border-border/50"
                           >
-                            <a href={project.github} target="_blank" rel="noopener noreferrer">
-                              <Github className="h-4 w-4 mr-2" />
-                              Code
-                            </a>
-                          </Button>
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Action Button */}
+                      {project.github !== "#" ? (
+                        <a 
+                          href={project.github} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="mt-auto w-full inline-flex items-center justify-center gap-2 h-11 rounded-xl bg-foreground text-background font-medium hover:bg-primary hover:text-primary-foreground transition-all duration-300 shadow-md group/btn"
+                        >
+                          <Github className="h-4 w-4 transition-transform group-hover/btn:scale-110" />
+                          <span>View Repository</span>
+                          <ExternalLink className="h-3 w-3 opacity-50 group-hover/btn:opacity-100" />
+                        </a>
+                      ) : (
+                        <div className="mt-auto w-full inline-flex items-center justify-center gap-2 h-11 rounded-xl bg-muted/50 text-muted-foreground font-medium border border-border/50 cursor-not-allowed">
+                          <Github className="h-4 w-4" />
+                          <span>Private Repository</span>
                         </div>
                       )}
                     </div>
 
-                    <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
-                      {project.featured && (
-                        <Badge className="bg-primary/90 text-primary-foreground shadow">
-                          <Star className="h-3 w-3 mr-1" />
-                          Featured
-                        </Badge>
-                      )}
-                      {project.isCapstone && (
-                        <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white shadow">
-                          <Award className="h-3 w-3 mr-1" />
-                          Capstone
-                        </Badge>
-                      )}
-                      {project.teamProject && (
-                        <Badge className="bg-blue-500/90 text-white shadow">
-                          <Users className="h-3 w-3 mr-1" />
-                          Team
-                        </Badge>
-                      )}
-                    </div>
-
-                    <div className="absolute top-3 right-3 z-10">
-                      <Badge variant="outline" className="bg-background/80 backdrop-blur-sm shadow">
-                        {project.category}
-                      </Badge>
-                    </div>
                   </div>
-                  <CardHeader className="pb-3 pt-4">
-                    <CardTitle className="text-lg font-semibold group-hover:text-primary transition-colors duration-300 flex items-center gap-2">
-                      {project.title}
-                      {project.isCapstone && (
-                        <span className="text-xs bg-gradient-to-r from-orange-500 to-red-500 text-white px-2 py-0.5 rounded-full font-medium">
-                          Bangkit 2024
-                        </span>
-                      )}
-                    </CardTitle>
-                    <CardDescription className="text-sm leading-relaxed h-16 overflow-hidden text-ellipsis">
-                      {" "}
-                      {/* Fixed height for description */}
-                      {project.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="pb-3">
-                    <div className="flex flex-wrap gap-1">
-                      {project.tags.map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="secondary"
-                          className="text-xs px-2 py-1 bg-muted/50 hover:bg-primary/10 hover:text-primary transition-colors duration-300"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                  <CardFooter className="pt-2 pb-4">
-                    <div className="w-full flex gap-2">
-                      {project.github !== "#" ? (
-                        <Button variant="outline" className="flex-1 group h-9 text-sm" asChild>
-                          <a href={project.github} target="_blank" rel="noopener noreferrer">
-                            <Github className="mr-2 h-3.5 w-3.5 transition-transform group-hover:scale-110" />
-                            View Code
-                          </a>
-                        </Button>
-                      ) : (
-                        <Button variant="outline" className="flex-1 h-9 text-sm" disabled>
-                          <Github className="mr-2 h-3.5 w-3.5" />
-                          Private Repository
-                        </Button>
-                      )}
-                    </div>
-                  </CardFooter>
-                </Card>
+                </Tilt>
               </motion.div>
             ))}
-          </div>
+          </AnimatePresence>
+        </motion.div>
 
-          <motion.div variants={itemVariants} className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
-            <div className="text-center p-4 bg-card/50 rounded-lg shadow">
-              <div className="text-3xl font-bold text-primary">10+</div>
-              <div className="text-sm text-muted-foreground mt-1">Total Projects</div>
+        {/* Clean Dashboard-like Stats */}
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-24 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"
+        >
+          {[
+            { value: "10+", label: "Total Projects" },
+            { value: "15+", label: "Technologies" },
+            { value: "1", label: "Capstone" },
+            { value: "2+", label: "Years Active" },
+          ].map((stat, i) => (
+            <div key={i} className="flex flex-col items-center justify-center p-6 rounded-3xl bg-background/40 border border-border/50 backdrop-blur-md shadow-sm">
+              <div className="text-3xl font-black bg-gradient-to-br from-foreground to-foreground/50 bg-clip-text text-transparent mb-1">
+                {stat.value}
+              </div>
+              <div className="text-sm font-medium text-muted-foreground uppercase tracking-widest text-center">
+                {stat.label}
+              </div>
             </div>
-            <div className="text-center p-4 bg-card/50 rounded-lg shadow">
-              <div className="text-3xl font-bold text-primary">5+</div>{" "}
-              {/* This might need to be dynamic based on unique tags */}
-              <div className="text-sm text-muted-foreground mt-1">Technologies</div>
-            </div>
-            <div className="text-center p-4 bg-card/50 rounded-lg shadow">
-              <div className="text-3xl font-bold text-primary">1</div>
-              <div className="text-sm text-muted-foreground mt-1">Capstone Project</div>
-            </div>
-            <div className="text-center p-4 bg-card/50 rounded-lg shadow">
-              <div className="text-3xl font-bold text-primary">2+</div>
-              <div className="text-sm text-muted-foreground mt-1">Years Active</div>
-            </div>
-          </motion.div>
-
-          <motion.div variants={itemVariants} className="text-center mt-12">
-            <Button variant="outline" className="group h-11 px-8 text-base" asChild>
-              <a href="https://github.com/mariosianturi19" target="_blank" rel="noopener noreferrer">
-                <Github className="mr-2 h-5 w-5 transition-transform group-hover:scale-110" />
-                View All Projects on GitHub
-              </a>
-            </Button>
-          </motion.div>
+          ))}
         </motion.div>
       </div>
     </section>

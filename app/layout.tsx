@@ -6,6 +6,7 @@ import { LanguageProvider } from '@/components/LanguageProvider';
 import Navbar from '@/components/Navbar';
 import ScrollProgress from '@/components/ScrollProgress';
 import BackToTop from '@/components/BackToTop';
+import SmoothScrollProvider from '@/components/SmoothScrollProvider'; // Import provider baru kita
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -32,12 +33,15 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <LanguageProvider>
-            <ScrollProgress />
-            <BackToTop />
-            <Navbar />
-            <main id="main-content" role="main" aria-label="Main content">
-              {children}
-            </main>
+            {/* Bungkus seluruh konten utama dengan SmoothScrollProvider */}
+            <SmoothScrollProvider>
+              <ScrollProgress />
+              <BackToTop />
+              <Navbar />
+              <main id="main-content" role="main" aria-label="Main content">
+                {children}
+              </main>
+            </SmoothScrollProvider>
           </LanguageProvider>
         </ThemeProvider>
       </body>

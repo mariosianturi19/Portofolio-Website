@@ -1,378 +1,320 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { useInView } from "react-intersection-observer"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import Tilt from "react-parallax-tilt"
 import { Badge } from "@/components/ui/badge"
-import { Briefcase, GraduationCap, Award, MapPin, Calendar } from "lucide-react"
+import { Briefcase, GraduationCap, Award, MapPin, Calendar, Sparkles, Building2 } from "lucide-react"
+import { useLanguage } from "@/components/LanguageProvider"
 
-// Data berdasarkan CV yang diberikan
+// --- DATA ---
 const experiences = [
-	{
-		id: 1,
-		title: "Front-End Developer",
-		company: "PT. Klik Digital Sinergi",
-		location: "Jakarta, Indonesia",
-		period: "Jan 2025 - Feb 2025",
-		type: "Internship",
-		description: "Developed responsive dashboard using Next.js, TypeScript, and modern CSS frameworks.",
-		skills: ["Next.js", "TypeScript", "CSS", "JavaScript"],
-		category: "work",
-	},
-	{
-		id: 2,
-		title: "Front-End Developer",
-		company: "PT. Telekomunikasi Selular",
-		location: "Jakarta, Indonesia",
-		period: "Jul 2024 - Aug 2024",
-		type: "Internship",
-		description: "Contributed to web development projects using modern frameworks and best practices.",
-		skills: ["React", "JavaScript", "CSS", "HTML"],
-		category: "work",
-	},
-	{
-		id: 3,
-		title: "Teaching Assistant",
-		company: "Diponegoro University",
-		location: "Semarang, Indonesia",
-		period: "Feb 2024 - Jun 2024",
-		type: "Part-time",
-		description: "Mentored students in programming fundamentals and computer science concepts.",
-		skills: ["Teaching", "Java", "Programming", "Mentoring"],
-		category: "work",
-	},
-	{
-		id: 4,
-		title: "Mobile Development Cohort",
-		company: "Bangkit Academy by Google, Tokopedia, Gojek & Traveloka",
-		location: "Remote, Indonesia",
-		period: "Feb 2024 - Jul 2024",
-		type: "Bootcamp",
-		description:
-			"Intensive 6-month program focusing on mobile development, machine learning, and cloud computing. Completed capstone project Si-Bantu with team collaboration.",
-		skills: [
-			"Android Development",
-			"Kotlin",
-			"Machine Learning",
-			"TensorFlow",
-			"Firebase",
-			"Google Cloud Platform",
-			"Team Collaboration",
-		],
-		category: "education",
-		isBangkit: true,
-	},
+    {
+        id: 1,
+        title: "Front-End Developer",
+        company: "PT. Klik Digital Sinergi",
+        location: "Jakarta, Indonesia",
+        period: "Jan 2025 - Feb 2025",
+        type: "Internship",
+        description: "Developed responsive dashboard using Next.js, TypeScript, and modern CSS frameworks.",
+        skills: ["Next.js", "TypeScript", "CSS", "JavaScript"],
+    },
+    {
+        id: 2,
+        title: "Front-End Developer",
+        company: "PT. Telekomunikasi Selular",
+        location: "Jakarta, Indonesia",
+        period: "Jul 2024 - Aug 2024",
+        type: "Internship",
+        description: "Contributed to web development projects using modern frameworks and best practices.",
+        skills: ["React", "JavaScript", "CSS", "HTML"],
+    },
+    {
+        id: 3,
+        title: "Teaching Assistant",
+        company: "Diponegoro University",
+        location: "Semarang, Indonesia",
+        period: "Feb 2024 - Jun 2024",
+        type: "Part-time",
+        description: "Mentored students in programming fundamentals and computer science concepts.",
+        skills: ["Teaching", "Java", "Programming", "Mentoring"],
+    },
+    {
+        id: 4,
+        title: "Mobile Development Cohort",
+        company: "Bangkit Academy by Google, Tokopedia, Gojek & Traveloka",
+        location: "Remote, Indonesia",
+        period: "Feb 2024 - Jul 2024",
+        type: "Bootcamp",
+        description: "Intensive 6-month program focusing on mobile development, machine learning, and cloud computing. Completed capstone project Si-Bantu with team collaboration.",
+        skills: ["Android Development", "Kotlin", "Machine Learning", "TensorFlow", "Firebase", "GCP"],
+        isBangkit: true,
+    },
 ]
 
 const education = [
-	{
-		id: 1,
-		title: "Computer Engineering",
-		company: "Diponegoro University",
-		location: "Semarang, Indonesia",
-		period: "2022 - Present",
-		type: "Bachelor's Degree",
-		description: "Focusing on software development, algorithms, and computer systems.",
-		skills: ["Software Engineering", "Data Structures", "Algorithms"],
-		category: "education",
-	},
-	{
-		id: 2,
-		title: "Mathematics & Natural Sciences",
-		company: "SMA Negeri 55",
-		location: "Jakarta, Indonesia",
-		period: "2019 - 2022",
-		type: "High School",
-		description: "Specialized in STEM subjects with focus on mathematics and physics.",
-		skills: ["Mathematics", "Physics", "Chemistry"],
-		category: "education",
-	},
-]
-
-const certificates = [
-	{ name: "Belajar Fundamental Aplikasi Android", issuer: "Dicoding Indonesia", year: "2023" },
-	{ name: "Memulai Pemrograman dengan Kotlin", issuer: "Dicoding Indonesia", year: "2023" },
-	{ name: "CCNAv7: Introduction to Networks", issuer: "Cisco Networking Academy", year: "2023" },
-	{ name: "Belajar Dasar AI", issuer: "Dicoding Indonesia", year: "2023" },
-	{ name: "Database Design Learner", issuer: "Oracle Academy", year: "2023" },
+    {
+        id: 1,
+        title: "Computer Engineering",
+        company: "Diponegoro University",
+        location: "Semarang, Indonesia",
+        period: "2022 - Present",
+        type: "Bachelor's Degree",
+        description: "Focusing on software development, algorithms, and computer systems.",
+        skills: ["Software Engineering", "Data Structures", "Algorithms"],
+    },
+    {
+        id: 2,
+        title: "Mathematics & Natural Sciences",
+        company: "SMA Negeri 55",
+        location: "Jakarta, Indonesia",
+        period: "2019 - 2022",
+        type: "High School",
+        description: "Specialized in STEM subjects with focus on mathematics and physics.",
+        skills: ["Mathematics", "Physics", "Chemistry"],
+    },
 ]
 
 const organizations = [
-	{
-		id: 1,
-		title: "Member",
-		company: "Google Developer Student Clubs (GDSC) Diponegoro University",
-		location: "Semarang, Indonesia",
-		period: "Sep 2023 - Jul 2024",
-		type: "Organization",
-		description:
-			"Being a member of GDSC as a bridge between theory and practice to have an interest in developing skills in the field of technology especially Google Technologies.",
-		skills: ["Google Technologies", "Community Building", "Tech Development", "Leadership"],
-		category: "organization",
-	},
-	{
-		id: 2,
-		title: "Member",
-		company: "Computer Engineering Research Club (CERC) Diponegoro University",
-		location: "Semarang, Indonesia",
-		period: "Apr 2023 - Jun 2024",
-		type: "Organization",
-		description:
-			"Being a member of CERC in the software field with the goal of improving programming skills, especially in frontend and backend.",
-		skills: ["Programming", "Frontend Development", "Backend Development", "Research"],
-		category: "organization",
-	},
+    {
+        id: 1,
+        title: "Member",
+        company: "Google Developer Student Clubs (GDSC)",
+        location: "Diponegoro University",
+        period: "Sep 2023 - Jul 2024",
+        type: "Organization",
+        description: "Bridge between theory and practice to develop skills in technology especially Google Technologies.",
+        skills: ["Google Technologies", "Community Building", "Leadership"],
+    },
+    {
+        id: 2,
+        title: "Member",
+        company: "Computer Engineering Research Club (CERC)",
+        location: "Diponegoro University",
+        period: "Apr 2023 - Jun 2024",
+        type: "Organization",
+        description: "Software field division aiming to improve programming skills, especially in frontend and backend.",
+        skills: ["Programming", "Frontend", "Backend", "Research"],
+    },
 ]
 
+const certificates = [
+    { id: 1, name: "Belajar Fundamental Aplikasi Android", issuer: "Dicoding Indonesia", year: "2023", icon: <Smartphone className="h-6 w-6" /> },
+    { id: 2, name: "Memulai Pemrograman dengan Kotlin", issuer: "Dicoding Indonesia", year: "2023", icon: <Code className="h-6 w-6" /> },
+    { id: 3, name: "CCNAv7: Introduction to Networks", issuer: "Cisco Networking Academy", year: "2023", icon: <Globe className="h-6 w-6" /> },
+    { id: 4, name: "Belajar Dasar AI", issuer: "Dicoding Indonesia", year: "2023", icon: <BrainCircuit className="h-6 w-6" /> },
+    { id: 5, name: "Database Design Learner", issuer: "Oracle Academy", year: "2023", icon: <Database className="h-6 w-6" /> },
+]
+
+// Extra icons for certificates
+import { Smartphone, Code, Globe, BrainCircuit, Database } from "lucide-react"
+
+type TabCategory = "Experience" | "Education" | "Organizations" | "Certificates"
+
 export default function Experience() {
-	const { ref, inView } = useInView({
-		threshold: 0.1,
-		triggerOnce: true,
-	})
+    const { t } = useLanguage()
+    const [activeTab, setActiveTab] = useState<TabCategory>("Experience")
 
-	const containerVariants = {
-		hidden: { opacity: 0 },
-		visible: {
-			opacity: 1,
-			transition: {
-				delayChildren: 0.3,
-				staggerChildren: 0.1,
-			},
-		},
-	}
+    const tabs: { id: TabCategory; label: string; icon: React.ReactNode }[] = [
+        { id: "Experience", label: "Experience", icon: <Briefcase className="w-4 h-4" /> },
+        { id: "Education", label: "Education", icon: <GraduationCap className="w-4 h-4" /> },
+        { id: "Organizations", label: "Organization", icon: <Building2 className="w-4 h-4" /> },
+        { id: "Certificates", label: "Certificates", icon: <Award className="w-4 h-4" /> },
+    ]
 
-	const itemVariants = {
-		hidden: { y: 50, opacity: 0 },
-		visible: {
-			y: 0,
-			opacity: 1,
-			transition: {
-				duration: 0.6,
-				ease: "easeOut",
-			},
-		},
-	}
+    // Template for Timeline (Experience, Education, Organization)
+    const TimelineLayout = ({ data }: { data: any[] }) => (
+        <div className="relative border-l-2 border-border/50 ml-4 md:ml-6 mt-8">
+            {data.map((item, index) => (
+                <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, x: -30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.5, delay: index * 0.1, type: "spring", stiffness: 100 }}
+                    className="mb-12 ml-8 md:ml-12 relative group"
+                >
+                    {/* Glowing Timeline Node */}
+                    <div className="absolute -left-[42px] md:-left-[58px] top-1.5 w-5 h-5 rounded-full bg-background border-[3px] border-primary/40 group-hover:border-primary group-hover:scale-125 transition-all duration-300 z-10 flex items-center justify-center shadow-[0_0_10px_rgba(var(--primary),0.2)] group-hover:shadow-[0_0_20px_rgba(var(--primary),0.6)]">
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                    </div>
 
-	return (
-		<section id="experience" className="py-16 md:py-24 bg-muted/30">
-			<div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20">
-				<motion.div ref={ref} variants={containerVariants} initial="hidden" animate={inView ? "visible" : "hidden"}>
-					<motion.div variants={itemVariants} className="text-center mb-16">
-						<span className="inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
-							Background
-						</span>
-						<h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
-							<span className="text-primary">04.</span> Experience & Education
-						</h2>
-						<p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-							My professional journey and educational background that shaped my skills in software development.
-						</p>
-						<div className="w-24 h-1 bg-gradient-to-r from-primary to-blue-500 mx-auto rounded-full mt-6"></div>
-					</motion.div>
+                    {/* Timeline Card */}
+                    <div className={`relative p-6 md:p-8 rounded-3xl bg-background/40 backdrop-blur-xl border border-border/50 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden ${item.isBangkit ? 'hover:border-orange-500/50' : 'hover:border-primary/30'}`}>
+                        {/* Subtle Background Glow on Hover */}
+                        <div className={`absolute -top-24 -right-24 w-48 h-48 opacity-0 group-hover:opacity-10 blur-3xl transition-opacity duration-500 ${item.isBangkit ? 'bg-orange-500' : 'bg-primary'}`} />
 
-					<div className="grid lg:grid-cols-2 gap-8 lg:gap-12 max-w-7xl mx-auto">
-						{/* Work Experience */}
-						<motion.div variants={itemVariants}>
-							<div className="flex items-center gap-3 mb-8">
-								<div className="bg-primary/10 p-3 rounded-lg">
-									<Briefcase className="h-5 w-5 text-primary" />
-								</div>
-								<h3 className="text-2xl font-bold">Work Experience</h3>
-							</div>
+                        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4 relative z-10">
+                            <div>
+                                <h3 className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors flex items-center gap-2">
+                                    {item.title}
+                                </h3>
+                                <div className="text-lg font-semibold text-foreground/80 mt-1">
+                                    {item.company}
+                                </div>
+                            </div>
+                            <div className="flex flex-col items-start md:items-end gap-2 shrink-0">
+                                <Badge variant={item.isBangkit ? "default" : "secondary"} className={item.isBangkit ? "bg-gradient-to-r from-orange-500 to-red-500 text-white border-none" : ""}>
+                                    {item.type}
+                                </Badge>
+                                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full">
+                                    <Calendar className="w-3.5 h-3.5" />
+                                    {item.period}
+                                </div>
+                            </div>
+                        </div>
 
-							<div className="space-y-4 mb-8">
-								{experiences.map((exp, index) => (
-									<motion.div
-										key={exp.id}
-										initial={{ opacity: 0, x: -50 }}
-										animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
-										transition={{ duration: 0.6, delay: index * 0.1 }}
-									>
-										<Card className="card-hover bg-card/50 backdrop-blur-sm border-border/50">
-											<CardHeader className="pb-3">
-												<div className="flex justify-between items-start mb-2">
-													<div>
-														<CardTitle className="text-lg">{exp.title}</CardTitle>
-														<CardDescription className="font-medium text-foreground/80">
-															{exp.company}
-														</CardDescription>
-													</div>
-													<Badge className="text-xs">{exp.type}</Badge>
-												</div>
-												<div className="flex items-center gap-4 text-sm text-muted-foreground">
-													<div className="flex items-center gap-1">
-														<Calendar className="h-3 w-3" />
-														{exp.period}
-													</div>
-													<div className="flex items-center gap-1">
-														<MapPin className="h-3 w-3" />
-														{exp.location}
-													</div>
-												</div>
-											</CardHeader>
-											<CardContent>
-												<p className="text-sm text-muted-foreground mb-3 leading-relaxed">
-													{exp.description}
-												</p>
-												<div className="flex flex-wrap gap-1">
-													{exp.skills.map((skill) => (
-														<Badge key={skill} className="text-xs">
-															{skill}
-														</Badge>
-													))}
-												</div>
-											</CardContent>
-										</Card>
-									</motion.div>
-								))}
-							</div>
+                        <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground mb-6 relative z-10">
+                            <MapPin className="w-4 h-4 text-primary/70" />
+                            {item.location}
+                        </div>
 
-							{/* Organizations */}
-							<div className="flex items-center gap-3 mb-6">
-								<div className="bg-orange-500/10 p-3 rounded-lg">
-									<Award className="h-5 w-5 text-orange-500" />
-								</div>
-								<h3 className="text-xl font-bold">Organizations</h3>
-							</div>
+                        <p className="text-muted-foreground/90 leading-relaxed mb-6 relative z-10">
+                            {item.description}
+                        </p>
 
-							<div className="space-y-4">
-								{organizations.map((org, index) => (
-									<motion.div
-										key={org.id}
-										initial={{ opacity: 0, x: -50 }}
-										animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
-										transition={{ duration: 0.6, delay: index * 0.1 }}
-									>
-										<Card className="card-hover bg-card/50 backdrop-blur-sm border-border/50">
-											<CardHeader className="pb-3">
-												<div className="flex justify-between items-start mb-2">
-													<div>
-														<CardTitle className="text-lg">{org.title}</CardTitle>
-														<CardDescription className="font-medium text-foreground/80">
-															{org.company}
-														</CardDescription>
-													</div>
-													<Badge variant="secondary" className="text-xs">
-														{org.type}
-													</Badge>
-												</div>
-												<div className="flex items-center gap-4 text-sm text-muted-foreground">
-													<div className="flex items-center gap-1">
-														<Calendar className="h-3 w-3" />
-														{org.period}
-													</div>
-													<div className="flex items-center gap-1">
-														<MapPin className="h-3 w-3" />
-														{org.location}
-													</div>
-												</div>
-											</CardHeader>
-											<CardContent>
-												<p className="text-sm text-muted-foreground mb-3 leading-relaxed">
-													{org.description}
-												</p>
-												<div className="flex flex-wrap gap-1">
-													{org.skills.map((skill) => (
-														<Badge key={skill} variant="outline" className="text-xs">
-															{skill}
-														</Badge>
-													))}
-												</div>
-											</CardContent>
-										</Card>
-									</motion.div>
-								))}
-							</div>
-						</motion.div>
+                        <div className="flex flex-wrap gap-2 relative z-10">
+                            {item.skills.map((skill: string) => (
+                                <Badge key={skill} variant="outline" className="bg-background/50 text-foreground/80 border-border/60 hover:border-primary/50 hover:bg-primary/5 transition-colors">
+                                    {skill}
+                                </Badge>
+                            ))}
+                        </div>
+                    </div>
+                </motion.div>
+            ))}
+        </div>
+    )
 
-						{/* Education & Certificates */}
-						<motion.div variants={itemVariants}>
-							<div className="flex items-center gap-3 mb-8">
-								<div className="bg-primary/10 p-3 rounded-lg">
-									<GraduationCap className="h-5 w-5 text-primary" />
-								</div>
-								<h3 className="text-2xl font-bold">Education</h3>
-							</div>
+    return (
+        <section id="experience" className="py-24 md:py-32 bg-muted/20 relative overflow-hidden">
+            {/* Background Decorators */}
+            <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none -z-10" />
+            <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none -z-10" />
 
-							<div className="space-y-4 mb-8">
-								{education.map((edu, index) => (
-									<motion.div
-										key={edu.id}
-										initial={{ opacity: 0, x: 50 }}
-										animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
-										transition={{ duration: 0.6, delay: index * 0.1 }}
-									>
-										<Card className="card-hover bg-card/50 backdrop-blur-sm border-border/50">
-											<CardHeader className="pb-3">
-												<div className="flex justify-between items-start mb-2">
-													<div>
-														<CardTitle className="text-lg">{edu.title}</CardTitle>
-														<CardDescription className="font-medium text-foreground/80">
-															{edu.company}
-														</CardDescription>
-													</div>
-													<Badge className="text-xs">{edu.type}</Badge>
-												</div>
-												<div className="flex items-center gap-4 text-sm text-muted-foreground">
-													<div className="flex items-center gap-1">
-														<Calendar className="h-3 w-3" />
-														{edu.period}
-													</div>
-													<div className="flex items-center gap-1">
-														<MapPin className="h-3 w-3" />
-														{edu.location}
-													</div>
-												</div>
-											</CardHeader>
-											<CardContent>
-												<p className="text-sm text-muted-foreground mb-3 leading-relaxed">
-													{edu.description}
-												</p>
-												<div className="flex flex-wrap gap-1">
-													{edu.skills.map((skill) => (
-														<Badge key={skill} className="text-xs">
-															{skill}
-														</Badge>
-													))}
-												</div>
-											</CardContent>
-										</Card>
-									</motion.div>
-								))}
-							</div>
+            <div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 relative z-10">
+                
+                {/* Header */}
+                <motion.div 
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.8 }}
+                    className="text-center mb-16"
+                >
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border/50 bg-background/50 backdrop-blur-md text-sm font-medium mb-6">
+                        <Sparkles className="h-4 w-4 text-primary" />
+                        <span>{t.experience.badge}</span>
+                    </div>
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 tracking-tight">
+                        {t.experience.title}
+                    </h2>
+                    <div className="w-20 h-1.5 bg-gradient-to-r from-primary to-blue-500 mx-auto rounded-full"></div>
+                </motion.div>
 
-							{/* Certificates */}
-							<div className="flex items-center gap-3 mb-6">
-								<div className="bg-primary/10 p-3 rounded-lg">
-									<Award className="h-5 w-5 text-primary" />
-								</div>
-								<h3 className="text-xl font-bold">Certificates</h3>
-							</div>
+                {/* Elegant Interactive Tabs */}
+                <div className="flex flex-wrap justify-center gap-2 mb-12">
+                    {tabs.map((tab) => {
+                        const isActive = activeTab === tab.id
+                        return (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`relative px-5 md:px-6 py-3 rounded-full text-sm md:text-base font-medium transition-all duration-300 flex items-center gap-2 ${
+                                    isActive ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                                }`}
+                            >
+                                {isActive && (
+                                    <motion.div
+                                        layoutId="expTabIndicator"
+                                        className="absolute inset-0 bg-primary rounded-full -z-10 shadow-lg shadow-primary/20"
+                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                    />
+                                )}
+                                <span className="relative z-10 flex items-center gap-2">
+                                    {tab.icon}
+                                    {tab.label}
+                                </span>
+                            </button>
+                        )
+                    })}
+                </div>
 
-							<div className="grid gap-3">
-								{certificates.map((cert, index) => (
-									<motion.div
-										key={cert.name}
-										initial={{ opacity: 0, scale: 0.9 }}
-										animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-										transition={{ duration: 0.4, delay: index * 0.05 }}
-									>
-										<Card className="p-4 card-hover bg-card/30 backdrop-blur-sm border-border/50">
-											<div className="flex justify-between items-start">
-												<div className="flex-1">
-													<h4 className="font-medium text-sm leading-tight mb-1">{cert.name}</h4>
-													<p className="text-xs text-muted-foreground">{cert.issuer}</p>
-												</div>
-												<Badge className="text-xs ml-2">{cert.year}</Badge>
-											</div>
-										</Card>
-									</motion.div>
-								))}
-							</div>
-						</motion.div>
-					</div>
-				</motion.div>
-			</div>
-		</section>
-	)
+                {/* Tab Content with Fluid Transition */}
+                <div className="max-w-4xl mx-auto min-h-[600px]">
+                    <AnimatePresence mode="wait">
+                        {activeTab === "Experience" && (
+                            <motion.div key="exp" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                                <TimelineLayout data={experiences} />
+                            </motion.div>
+                        )}
+                        {activeTab === "Education" && (
+                            <motion.div key="edu" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                                <TimelineLayout data={education} />
+                            </motion.div>
+                        )}
+                        {activeTab === "Organizations" && (
+                            <motion.div key="org" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                                <TimelineLayout data={organizations} />
+                            </motion.div>
+                        )}
+                        
+                        {/* 3D Holographic Grid for Certificates */}
+                        {activeTab === "Certificates" && (
+                            <motion.div 
+                                key="cert"
+                                initial={{ opacity: 0, y: 20 }} 
+                                animate={{ opacity: 1, y: 0 }} 
+                                exit={{ opacity: 0, y: -20 }}
+                                className="grid sm:grid-cols-2 gap-6 mt-8"
+                            >
+                                {certificates.map((cert, index) => (
+                                    <motion.div
+                                        key={cert.id}
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                                    >
+                                        <Tilt
+                                            tiltMaxAngleX={10}
+                                            tiltMaxAngleY={10}
+                                            perspective={1000}
+                                            scale={1.02}
+                                            transitionSpeed={2000}
+                                            glareEnable={true}
+                                            glareMaxOpacity={0.15}
+                                            glareColor="hsl(var(--primary))"
+                                            glarePosition="all"
+                                            className="h-full rounded-3xl"
+                                        >
+                                            <div className="h-full p-8 rounded-3xl bg-background/60 backdrop-blur-xl border border-border/50 shadow-xl hover:border-primary/50 transition-colors duration-500 group flex flex-col justify-between">
+                                                <div className="flex justify-between items-start mb-6">
+                                                    <div className="p-4 rounded-2xl bg-primary/10 text-primary group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500">
+                                                        {cert.icon}
+                                                    </div>
+                                                    <Badge variant="outline" className="bg-background font-mono shadow-sm">
+                                                        {cert.year}
+                                                    </Badge>
+                                                </div>
+                                                <div>
+                                                    <h4 className="font-bold text-xl leading-tight mb-2 text-foreground group-hover:text-primary transition-colors">
+                                                        {cert.name}
+                                                    </h4>
+                                                    <p className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
+                                                        <Award className="w-4 h-4" />
+                                                        {cert.issuer}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </Tilt>
+                                    </motion.div>
+                                ))}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+
+            </div>
+        </section>
+    )
 }
