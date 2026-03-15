@@ -78,10 +78,16 @@ const config: Config = {
             height: '0',
           },
         },
+        // --- TAMBAHAN UNTUK ANIMASI SHIMMER ---
+        shimmer: {
+          '100%': { transform: 'translateX(100%)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        // --- TAMBAHAN UNTUK ANIMASI SHIMMER ---
+        shimmer: 'shimmer 2s linear infinite',
       },
     },
   },
