@@ -1,3 +1,4 @@
+// file: app/layout.tsx
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -6,7 +7,8 @@ import { LanguageProvider } from '@/components/LanguageProvider';
 import Navbar from '@/components/Navbar';
 import ScrollProgress from '@/components/ScrollProgress';
 import BackToTop from '@/components/BackToTop';
-import SmoothScrollProvider from '@/components/SmoothScrollProvider'; // Import provider baru kita
+import SmoothScrollProvider from '@/components/SmoothScrollProvider';
+import Preloader from '@/components/Preloader'; // Preloader tetap dipertahankan
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,10 +24,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      {/* Class 'cursor-none' sudah dihapus, kursor kembali normal */}
+      <body className={`${inter.className} selection:bg-primary/30 selection:text-primary`}>
+        
+        {/* Cinematic Film Grain Overlay (Tetap dipertahankan untuk kesan mewah) */}
+        <div className="fixed inset-0 z-[999] pointer-events-none opacity-[0.03] dark:opacity-[0.04] bg-[url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Dissolve_Noise_Texture.png')] bg-repeat" />
+
         <a href="#main-content" className="skip-to-main">
           Skip to main content
         </a>
+        
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -33,8 +41,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <LanguageProvider>
-            {/* Bungkus seluruh konten utama dengan SmoothScrollProvider */}
             <SmoothScrollProvider>
+              
+              <Preloader /> {/* Layar pembuka megah */}
+              
               <ScrollProgress />
               <BackToTop />
               <Navbar />
