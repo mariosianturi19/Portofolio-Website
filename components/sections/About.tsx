@@ -97,7 +97,7 @@ export default function About() {
             <div className="space-y-6 text-lg text-muted-foreground/90 leading-relaxed font-medium">
               <p>
                 Hello! I&apos;m Togar Anthony Mario Sianturi, a passionate{" "}
-                <span className="text-foreground font-bold">Front-End Developer & Mobile App Creator</span> based in Semarang, Indonesia. I specialize in creating beautiful, responsive web applications and innovative mobile apps using modern JavaScript frameworks and native technologies.
+                <span className="text-foreground font-bold">Web Developer & Mobile App Creator</span> based in Semarang, Indonesia. I specialize in creating beautiful, responsive web applications and innovative mobile apps using modern JavaScript frameworks and native technologies.
               </p>
               <p>
                 I&apos;m a proud graduate of the <span className="text-foreground font-bold">Bangkit Academy 2024</span>, Google&apos;s flagship program. Through this program, I enhanced my skills in Mobile Development and collaborated on innovative projects that solve real-world problems.
