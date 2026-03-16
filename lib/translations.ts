@@ -10,7 +10,7 @@ export const translations = {
     },
     hero: {
       greeting: "Hi, I'm Mario Sianturi",
-      role: "Front-End Developer & Mobile App Creator",
+      role: "Web Developer & Mobile App Creator",
       description: "Passionate Computer Engineering student at Diponegoro University, specializing in mobile and web development. Bangkit Academy 2024 graduate with 10+ GitHub repositories, building innovative solutions and contributing to the tech community.",
       viewProjects: "View My Projects",
       github: "GitHub",
@@ -61,7 +61,7 @@ export const translations = {
     },
     hero: {
       greeting: "Hai, Saya Mario Sianturi",
-      role: "Pengembang Front-End & Pembuat Aplikasi Mobile",
+      role: "Pengembang Web & Pembuat Aplikasi Mobile",
       description: "Mahasiswa Teknik Komputer yang bersemangat di Universitas Diponegoro, mengkhususkan diri dalam pengembangan mobile dan web. Lulusan Bangkit Academy 2024 dengan 10+ repositori GitHub, membangun solusi inovatif dan berkontribusi pada komunitas teknologi.",
       viewProjects: "Lihat Proyek Saya",
       github: "GitHub",

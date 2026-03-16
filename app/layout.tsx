@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Togar Anthony Mario Sianturi - Portfolio',
-  description: 'Portfolio website of Togar Anthony Mario Sianturi, a Front-End Developer and Mobile App Creator.',
+  description: 'Portfolio website of Togar Anthony Mario Sianturi, a Web Developer and Mobile App Creator.',
 };
 
 export default function RootLayout({
