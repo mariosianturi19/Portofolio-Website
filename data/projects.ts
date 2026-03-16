@@ -57,8 +57,8 @@ export const projectsData: Project[] = [
     image: "/SIGAP.png",
     screenshots: [
       "/SIGAP.png",
-      "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=800&h=600&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&h=600&q=80",
+      "/projects/s1.png",
+      "/projects/s2.png",
     ],
     tags: ["Next.js", "TypeScript", "React", "CSS"],
     github: "https://github.com/mariosianturi19/SIGAP-UNDIP",
@@ -82,8 +82,8 @@ export const projectsData: Project[] = [
     image: "/Premiere.png",
     screenshots: [
       "/Premiere.png",
-      "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=800&h=600&q=80",
-      "https://images.unsplash.com/photo-1560272564-c83b66b1ad12?auto=format&fit=crop&w=800&h=600&q=80",
+      "/projects/p1.png",
+      "/projects/p2.png",
     ],
     tags: ["Next.js", "React.js", "TypeScript", "Full-Stack"],
     github: "https://github.com/mariosianturi19/premiere-league-app",
@@ -107,8 +107,7 @@ export const projectsData: Project[] = [
     image: "/Gaspol.png",
     screenshots: [
       "/Gaspol.png",
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&h=600&q=80",
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&h=600&q=80",
+      "/projects/g1.png",
     ],
     tags: ["Next.js", "TypeScript", "PWA", "Responsive Design"],
     github: "https://github.com/mariosianturi19/Gaspol",
@@ -132,8 +131,8 @@ export const projectsData: Project[] = [
     image: "/MotoMarket.png",
     screenshots: [
       "/MotoMarket.png",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&h=600&q=80",
-      "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?auto=format&fit=crop&w=800&h=600&q=80",
+      "/projects/k1.png",
+      "/projects/k2.png",
     ],
     tags: ["Vite", "TypeScript", "React.js", "Responsive Design"],
     github: "https://github.com/mariosianturi19/MotoMarket",
@@ -157,8 +156,8 @@ export const projectsData: Project[] = [
     image: "/MPL.png",
     screenshots: [
       "/MPL.png",
-      "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&h=600&q=80",
-      "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&w=800&h=600&q=80",
+      "/projects/m1.png",
+      "/projects/m2.png",
     ],
     tags: ["React.js", "API", "PWA", "JavaScript"],
     github: "#",
