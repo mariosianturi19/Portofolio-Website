@@ -29,9 +29,9 @@ export default function About() {
   }
 
   return (
-    <section id="about" className="relative bg-background py-28 md:py-36">
+    <section id="about" className="relative bg-background py-20 sm:py-24 md:py-36">
       <div className="container-custom">
-        <div className="grid items-start gap-16 lg:grid-cols-12 lg:gap-14">
+        <div className="grid min-w-0 items-start gap-14 lg:grid-cols-12 lg:gap-14">
           {/* ── Kiri: sticky header + narasi ── */}
           <motion.div
             variants={fadeUp}
@@ -41,11 +41,11 @@ export default function About() {
             className="lg:sticky lg:top-32 lg:col-span-6"
           >
             <p className="section-label mb-6">01 / {t.about.badge}</p>
-            <h2 className="mb-10 font-display text-4xl font-extrabold uppercase leading-[1.02] tracking-tight md:text-5xl lg:text-6xl">
+            <h2 className="mb-8 break-words font-display text-[clamp(2.25rem,10vw,3.75rem)] font-extrabold uppercase leading-[1.02] tracking-tight sm:mb-10 md:text-5xl lg:text-6xl">
               {t.about.title}
             </h2>
 
-            <div className="space-y-6 text-base font-light leading-8 text-muted-foreground md:text-lg">
+            <div className="space-y-5 text-base font-light leading-7 text-muted-foreground sm:space-y-6 sm:leading-8 md:text-lg">
               <p>
                 I&apos;m Togar Anthony Mario Sianturi, a <strong className="font-medium text-foreground">Computer Engineering graduate awaiting commencement</strong> and a Frontend / Full-Stack Developer based in Jakarta, Indonesia. I focus on responsive, maintainable web applications built with React, Next.js, TypeScript, and Node.js.
               </p>
@@ -57,14 +57,14 @@ export default function About() {
               </p>
             </div>
 
-            <div className="mt-10 flex flex-wrap gap-8">
-              <a href="#projects" className="group inline-flex items-center border-b border-border/30 pb-1 font-mono text-xs uppercase tracking-[0.12em] transition-colors hover:border-primary hover:text-primary">
+            <div className="mt-8 flex flex-wrap gap-x-8 gap-y-3 sm:mt-10">
+              <a href="#projects" className="group inline-flex items-center border-b border-border/30 py-2.5 font-mono text-xs uppercase tracking-[0.12em] transition-colors hover:border-primary hover:text-primary">
                 Check out my work <MoveRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-2" />
               </a>
-              <a href="https://github.com/mariosianturi19" target="_blank" rel="noopener noreferrer" className="group inline-flex items-center font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-foreground">
+              <a href="https://github.com/mariosianturi19" target="_blank" rel="noopener noreferrer" className="group inline-flex items-center py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-foreground">
                 <Github className="mr-2 h-4 w-4" />GitHub
               </a>
-              <a href="/Togar-Anthony-Mario-Sianturi-CV.pdf" download className="group inline-flex items-center font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-foreground">
+              <a href="/Togar-Anthony-Mario-Sianturi-CV.pdf" download className="group inline-flex items-center py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-foreground">
                 <Download className="mr-2 h-4 w-4 transition-transform group-hover:translate-y-0.5" />CV
               </a>
             </div>
@@ -78,7 +78,7 @@ export default function About() {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-80px" }}
-              className="mb-14"
+              className="mb-12 sm:mb-14"
             >
               <p className="mb-6 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
                 Tech stack &amp; tools <span className="text-primary">({String(SKILLS.length).padStart(2, "0")})</span>
@@ -91,12 +91,12 @@ export default function About() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.04, duration: 0.4, ease: "easeOut" }}
-                    className="group flex items-baseline gap-4 border-b border-border/10 py-3 transition-all duration-300 hover:pl-3"
+                    className="group flex min-w-0 items-baseline gap-3 border-b border-border/10 py-3 transition-all duration-300 hover:pl-2 sm:gap-4 sm:hover:pl-3"
                   >
                     <span className="font-mono text-[10px] text-primary/60 transition-colors group-hover:text-primary">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <span className="font-display text-lg font-bold uppercase tracking-tight text-foreground/80 transition-colors group-hover:text-foreground md:text-xl">
+                    <span className="min-w-0 break-words font-display text-lg font-bold uppercase tracking-tight text-foreground/80 transition-colors group-hover:text-foreground md:text-xl">
                       {skill}
                     </span>
                   </motion.li>

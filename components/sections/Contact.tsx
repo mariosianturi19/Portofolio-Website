@@ -179,10 +179,10 @@ export default function Contact() {
   ]
 
   const fieldClass = (hasError: boolean) =>
-    `h-auto rounded-none border-0 border-b bg-transparent px-0 py-3 text-base focus-visible:border-primary ${hasError ? "border-destructive" : "border-border/25"}`
+    `min-h-12 rounded-none border-0 border-b bg-transparent px-0 py-3 text-base focus-visible:border-primary ${hasError ? "border-destructive" : "border-border/25"}`
 
   return (
-    <section id="contact" className="relative bg-background py-28 md:py-36">
+    <section id="contact" className="relative bg-background py-20 sm:py-24 md:py-36">
       <div className="container-custom relative z-10">
         {/* ── Header ── */}
         <motion.div
@@ -190,10 +190,10 @@ export default function Contact() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7, ease: EASE }}
-          className="mb-16 md:mb-24"
+          className="mb-12 min-w-0 sm:mb-16 md:mb-24"
         >
           <p className="section-label mb-5">05 / Let&apos;s Connect</p>
-          <h2 className="font-display text-[11vw] font-extrabold uppercase leading-[0.95] tracking-tight sm:text-[9vw] lg:text-8xl">
+          <h2 className="break-normal font-display text-[clamp(2.75rem,13vw,5rem)] font-extrabold uppercase leading-[0.95] tracking-tight sm:text-[9vw] lg:text-8xl">
             Get In<br />
             <span className="text-outline">Touch</span>
           </h2>
@@ -202,7 +202,7 @@ export default function Contact() {
           </p>
         </motion.div>
 
-        <div className="grid items-start gap-16 lg:grid-cols-12 lg:gap-12">
+        <div className="grid min-w-0 items-start gap-14 sm:gap-16 lg:grid-cols-12 lg:gap-12">
           {/* ── Kiri: kontak langsung ── */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -214,7 +214,7 @@ export default function Contact() {
             <h3 className="sr-only">Contact details</h3>
             <div className="border-t border-border/10">
               {contactRows.map((item) => (
-                <div key={item.label} className="group flex items-center gap-5 border-b border-border/10 py-6">
+                <div key={item.label} className="group flex min-w-0 items-start gap-4 border-b border-border/10 py-5 sm:items-center sm:gap-5 sm:py-6">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border/20 text-muted-foreground transition-colors duration-300 group-hover:border-primary group-hover:text-primary">
                     {item.icon}
                   </span>
@@ -225,7 +225,7 @@ export default function Contact() {
                         href={item.href}
                         target={item.href.startsWith("http") ? "_blank" : undefined}
                         rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                        className="break-words text-base font-medium text-foreground transition-colors hover:text-primary sm:text-lg"
+                        className="break-all text-sm font-medium leading-6 text-foreground transition-colors hover:text-primary min-[380px]:text-base sm:break-words sm:text-lg"
                       >
                         {item.value}
                       </a>
@@ -239,7 +239,7 @@ export default function Contact() {
 
             <div className="mt-10">
               <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Social profiles</p>
-              <div className="flex gap-3">
+              <div className="flex min-w-0 flex-wrap items-center gap-3">
                 {socialLinks.map((social) => (
                   <a
                     key={social.label}
@@ -254,7 +254,7 @@ export default function Contact() {
                 ))}
                 <a
                   href="mailto:19mariosianturi@gmail.com"
-                  className="group ml-2 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-primary"
+                  className="group mt-2 inline-flex min-h-11 w-full min-w-0 items-center gap-2 break-all font-mono text-[10px] uppercase leading-5 tracking-[0.08em] text-muted-foreground transition-colors hover:text-primary sm:ml-2 sm:mt-0 sm:w-auto sm:text-[11px] sm:tracking-[0.12em]"
                 >
                   19mariosianturi@gmail.com
                   <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -271,7 +271,7 @@ export default function Contact() {
             transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
             className="lg:col-span-7"
           >
-            <div className="mb-8 flex items-baseline justify-between">
+            <div className="mb-8 flex min-w-0 flex-col items-start gap-2 sm:flex-row sm:items-baseline sm:justify-between">
               <h3 id="contact-form-title" className="font-display text-2xl font-extrabold uppercase tracking-tight">
                 Send a message
               </h3>
@@ -393,7 +393,7 @@ export default function Contact() {
                 {formStatus.message}
               </p>
 
-              <Magnetic strength={0.15}>
+              <Magnetic strength={0.15} className="w-full sm:w-auto">
                 <button
                   type="submit"
                   disabled={isSubmitting}

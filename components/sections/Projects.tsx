@@ -108,7 +108,7 @@ export default function Projects() {
   const globalIndexOf = (project: Project) => portfolioProjects.findIndex((p) => p.id === project.id)
 
   return (
-    <section id="projects" className="relative bg-background py-28 md:py-36">
+    <section id="projects" className="relative bg-background py-20 sm:py-24 md:py-36">
       <div className="container-custom relative z-10">
 
         {/* ── Header ── */}
@@ -117,13 +117,13 @@ export default function Projects() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7, ease: EASE }}
-          className="mb-14 flex flex-wrap items-end justify-between gap-8"
+          className="mb-12 flex min-w-0 flex-col items-start gap-6 lg:mb-14 lg:flex-row lg:items-end lg:justify-between lg:gap-8"
         >
-          <div>
+          <div className="w-full min-w-0 lg:w-auto">
             <p className="section-label mb-5">02 / {t.projects.badge}</p>
-            <h2 className="font-display text-4xl font-extrabold uppercase tracking-tight md:text-5xl lg:text-6xl">
-              {t.projects.title}
-              <sup className="ml-3 font-mono text-sm font-normal tracking-[0.15em] text-primary">
+            <h2 className="min-w-0 break-normal font-display text-[clamp(1.75rem,8.5vw,3.75rem)] font-extrabold uppercase leading-[1.02] tracking-tight md:text-5xl lg:text-6xl">
+              <span className="block sm:inline">{t.projects.title}</span>
+              <sup className="mt-2 block align-top font-mono text-xs font-normal tracking-[0.12em] text-primary sm:ml-3 sm:mt-0 sm:inline-block sm:text-sm sm:tracking-[0.15em]">
                 ({String(filteredCaseStudies.length).padStart(2, "0")})
               </sup>
             </h2>
@@ -134,14 +134,14 @@ export default function Projects() {
         </motion.div>
 
         {/* ── Filter — mono underline tabs ── */}
-        <div className="mb-10 flex flex-wrap gap-7 font-mono text-xs uppercase tracking-[0.15em]">
+        <div className="mb-10 flex flex-wrap gap-x-5 gap-y-1 font-mono text-[11px] uppercase tracking-[0.12em] sm:gap-7 sm:text-xs sm:tracking-[0.15em]">
           {categories.map((category) => {
             const isActive = filter === category.id
             return (
               <button
                 key={category.id}
                 onClick={() => setFilter(category.id)}
-                className={`relative pb-1.5 transition-colors duration-300 ${
+                className={`relative flex min-h-11 items-center pb-1.5 pt-2 transition-colors duration-300 ${
                   isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                 }`}
               >
@@ -160,7 +160,7 @@ export default function Projects() {
 
         {/* ── Case studies — editorial rows ── */}
         {filteredCaseStudies.length > 0 && (
-          <div className="mb-24">
+          <div className="mb-16 sm:mb-20 lg:mb-24">
             <div className="mb-4 flex items-baseline justify-between">
               <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
                 Selected work <span className="text-primary">— case studies</span>
@@ -290,29 +290,29 @@ function CaseStudyRow({
       onClick={onOpen}
       onMouseEnter={() => onHover(project)}
       onMouseLeave={() => onHover(null)}
-      className="group grid w-full grid-cols-[auto_1fr_auto] items-center gap-5 border-b border-border/10 px-2 py-7 text-left transition-all duration-300 hover:pl-6 md:gap-8 md:py-8"
+      className="group grid w-full min-w-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-border/10 py-5 text-left transition-all duration-300 sm:gap-5 sm:px-2 sm:py-7 sm:hover:pl-6 md:gap-8 md:py-8"
       aria-label={`Open details for ${project.title}`}
     >
-      <span className="font-display text-2xl font-extrabold text-foreground/20 transition-colors duration-300 group-hover:text-primary md:text-3xl">
+      <span className="font-display text-xl font-extrabold text-foreground/20 transition-colors duration-300 group-hover:text-primary sm:text-2xl md:text-3xl">
         {String(index + 1).padStart(2, "0")}
       </span>
       <span className="min-w-0">
-        <span className="block truncate font-display text-xl font-bold uppercase tracking-tight transition-colors duration-300 group-hover:text-primary md:text-3xl">
+        <span className="block break-words font-display text-lg font-bold uppercase leading-tight tracking-tight transition-colors duration-300 group-hover:text-primary sm:truncate sm:text-xl md:text-3xl">
           {project.title}
         </span>
-        <span className="mt-2 block font-mono text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+        <span className="mt-2 block break-words font-mono text-[9px] uppercase leading-5 tracking-[0.08em] text-muted-foreground sm:text-[11px] sm:tracking-[0.1em]">
           <span className="text-foreground/80">{project.category}</span>
-          <span className="mx-2.5 text-primary">/</span>
+          <span className="mx-1.5 text-primary sm:mx-2.5">/</span>
           {project.tags.slice(0, 3).join(" · ")}
           {project.year && (
             <>
-              <span className="mx-2.5 text-primary">/</span>
+              <span className="mx-1.5 text-primary sm:mx-2.5">/</span>
               {project.year}
             </>
           )}
         </span>
       </span>
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border/20 text-muted-foreground transition-all duration-300 group-hover:rotate-45 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border/20 text-muted-foreground transition-all duration-300 group-hover:rotate-45 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground">
         <ArrowUpRight className="h-4 w-4" />
       </span>
     </button>
@@ -341,14 +341,14 @@ function SupportingCard({ project, onOpen }: { project: Project; onOpen: () => v
           }`}
         />
       </span>
-      <span className="flex items-center justify-between px-5 py-4">
-        <span>
-          <span className="block font-display text-base font-bold uppercase tracking-tight">{project.title}</span>
+      <span className="flex min-w-0 items-center justify-between gap-4 px-4 py-4 sm:px-5">
+        <span className="min-w-0">
+          <span className="block break-words font-display text-base font-bold uppercase tracking-tight">{project.title}</span>
           <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
             {project.category} {project.year ? `· ${project.year}` : ""}
           </span>
         </span>
-        <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-all duration-300 group-hover:text-primary" />
+        <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-all duration-300 group-hover:text-primary" />
       </span>
     </button>
   )
@@ -455,7 +455,7 @@ function ProjectModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-50 bg-background/70 backdrop-blur-sm"
+            className="fixed inset-0 z-[70] bg-background/70 backdrop-blur-sm"
             onClick={onClose}
           />
 
@@ -467,7 +467,7 @@ function ProjectModal({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
             transition={{ duration: 0.45, ease: EASE }}
-            className="fixed inset-x-0 bottom-0 top-14 z-50 flex flex-col rounded-t-2xl border-t border-border/15 bg-card md:top-20"
+            className="fixed inset-0 z-[80] flex min-w-0 flex-col bg-card md:inset-x-0 md:bottom-0 md:top-20 md:rounded-t-2xl md:border-t md:border-border/15"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
@@ -475,43 +475,43 @@ function ProjectModal({
             aria-describedby={`project-description-${project.id}`}
           >
             {/* ── TOP BAR ── */}
-            <div className="flex flex-shrink-0 items-center justify-between gap-3 border-b border-border/10 px-4 py-4 sm:px-8">
-              <div className="flex min-w-0 items-center gap-4 font-mono text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+            <div className="flex flex-shrink-0 items-center justify-between gap-2 border-b border-border/10 px-3 py-3 sm:gap-3 sm:px-8 sm:py-4">
+              <div className="flex min-w-0 items-center gap-2 font-mono text-[9px] uppercase tracking-[0.08em] text-muted-foreground sm:gap-4 sm:text-[11px] sm:tracking-[0.15em]">
                 <span className="shrink-0 text-primary">
                   Case study — {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
                 </span>
                 <span className="hidden sm:inline">{project.category}</span>
                 {project.year && <span className="hidden md:inline">{project.year}</span>}
                 {project.isCapstone && (
-                  <span className="hidden items-center gap-1.5 text-foreground lg:flex"><Award className="h-3.5 w-3.5 text-primary" />Capstone</span>
+                  <span className="hidden items-center gap-1.5 text-foreground sm:flex"><Award className="h-3.5 w-3.5 text-primary" />Capstone</span>
                 )}
                 {project.teamProject && (
-                  <span className="hidden items-center gap-1.5 text-foreground lg:flex"><Users className="h-3.5 w-3.5 text-primary" />Team</span>
+                  <span className="hidden items-center gap-1.5 text-foreground sm:flex"><Users className="h-3.5 w-3.5 text-primary" />Team</span>
                 )}
               </div>
-              <div className="flex shrink-0 items-center gap-2">
+              <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
                 <button
                   onClick={onPrev}
                   disabled={!hasPrev}
-                  className="flex h-9 items-center gap-1 rounded-full border border-border/20 px-3.5 font-mono text-[11px] uppercase tracking-[0.1em] transition-all hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-30"
+                  className="flex h-11 w-11 items-center justify-center gap-1 rounded-full border border-border/20 font-mono text-[11px] uppercase tracking-[0.1em] transition-all hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-30 sm:w-auto sm:px-4"
                   aria-label="Previous project"
                 >
-                  <ChevronLeft className="h-3.5 w-3.5" />
+                  <ChevronLeft className="h-4 w-4" />
                   <span className="hidden sm:inline">Prev</span>
                 </button>
                 <button
                   onClick={onNext}
                   disabled={!hasNext}
-                  className="flex h-9 items-center gap-1 rounded-full border border-border/20 px-3.5 font-mono text-[11px] uppercase tracking-[0.1em] transition-all hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-30"
+                  className="flex h-11 w-11 items-center justify-center gap-1 rounded-full border border-border/20 font-mono text-[11px] uppercase tracking-[0.1em] transition-all hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-30 sm:w-auto sm:px-4"
                   aria-label="Next project"
                 >
                   <span className="hidden sm:inline">Next</span>
-                  <ChevronRight className="h-3.5 w-3.5" />
+                  <ChevronRight className="h-4 w-4" />
                 </button>
                 <button
                   ref={closeButtonRef}
                   onClick={onClose}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border/20 transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-border/20 transition-all hover:border-primary hover:bg-primary hover:text-primary-foreground"
                   aria-label="Close project details"
                 >
                   <X className="h-4 w-4" />
@@ -520,11 +520,11 @@ function ProjectModal({
             </div>
 
             {/* ── SCROLLABLE BODY ── */}
-            <div ref={contentRef} className="flex-1 overflow-y-auto">
-              <div className="grid lg:grid-cols-[55%_45%]">
+            <div ref={contentRef} className="min-h-0 flex-1 overscroll-contain overflow-y-auto">
+              <div className="grid min-w-0 lg:grid-cols-[55%_45%]">
 
                 {/* ── LEFT: gallery ── */}
-                <div className="border-b border-border/10 lg:border-b-0 lg:border-r">
+                <div className="min-w-0 border-b border-border/10 lg:border-b-0 lg:border-r">
                   <div className="relative aspect-video overflow-hidden bg-muted">
                     <AnimatePresence initial={false} custom={imgDirection} mode="popLayout">
                       <motion.div
@@ -552,14 +552,14 @@ function ProjectModal({
                       <>
                         <button
                           onClick={() => goImg(-1)}
-                          className="absolute left-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-border/20 bg-background/80 backdrop-blur-sm transition-all hover:border-primary hover:text-primary"
+                          className="absolute left-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-border/20 bg-background/80 backdrop-blur-sm transition-all hover:border-primary hover:text-primary sm:left-4"
                           aria-label="Previous screenshot"
                         >
                           <ChevronLeft className="h-5 w-5" />
                         </button>
                         <button
                           onClick={() => goImg(1)}
-                          className="absolute right-4 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-border/20 bg-background/80 backdrop-blur-sm transition-all hover:border-primary hover:text-primary"
+                          className="absolute right-2 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-border/20 bg-background/80 backdrop-blur-sm transition-all hover:border-primary hover:text-primary sm:right-4"
                           aria-label="Next screenshot"
                         >
                           <ChevronRight className="h-5 w-5" />
@@ -585,7 +585,7 @@ function ProjectModal({
                   </div>
 
                   {screenshots.length > 1 && (
-                    <div className="flex gap-3 overflow-x-auto p-4">
+                    <div className="flex gap-3 overflow-x-auto overscroll-x-contain p-3 sm:p-4">
                       {screenshots.map((src, i) => (
                         <button
                           key={i}
@@ -609,10 +609,10 @@ function ProjectModal({
                 </div>
 
                 {/* ── RIGHT: details ── */}
-                <div className="flex flex-col p-6 sm:p-8 lg:p-10">
+                <div className="flex min-w-0 flex-col p-5 sm:p-8 lg:p-10">
 
                   <div className="mb-7">
-                    <h2 id={`project-title-${project.id}`} className="mb-3 font-display text-2xl font-extrabold uppercase tracking-tight lg:text-4xl">
+                    <h2 id={`project-title-${project.id}`} className="mb-3 break-words font-display text-2xl font-extrabold uppercase leading-tight tracking-tight md:text-3xl lg:text-4xl">
                       {project.title}
                     </h2>
                     <p id={`project-description-${project.id}`} className="text-sm font-light leading-7 text-muted-foreground">
@@ -634,7 +634,7 @@ function ProjectModal({
                       {project.caseStudy.status && (
                         <div>
                           <span className="spec-key">Status</span>
-                          <span className="spec-value inline-flex items-center gap-2">
+                          <span className="spec-value inline-flex min-w-0 items-start gap-2">
                             <CircleDot className="h-3 w-3 text-primary" />
                             {project.caseStudy.status}
                           </span>
@@ -702,7 +702,7 @@ function ProjectModal({
                       <Tag className="h-3.5 w-3.5" />
                       Tech Stack
                     </h3>
-                    <p className="font-mono text-xs leading-6 text-muted-foreground">
+                    <p className="break-words font-mono text-xs leading-6 text-muted-foreground">
                       {project.tags.join(" / ")}
                     </p>
                   </div>

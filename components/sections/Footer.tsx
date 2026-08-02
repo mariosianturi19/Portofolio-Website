@@ -19,14 +19,14 @@ export default function Footer() {
 
   return (
     <footer className="relative overflow-hidden border-t border-border/10 bg-background">
-      <div className="container-custom relative z-10 pt-20">
-        <div className="mb-16 grid gap-12 md:mb-20 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+      <div className="container-custom relative z-10 pt-16 sm:pt-20">
+        <div className="mb-14 grid min-w-0 gap-10 sm:mb-16 sm:gap-12 md:mb-20 md:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }} className="lg:col-span-5">
-            <h2 className="mb-4 font-display text-2xl font-extrabold tracking-tight">
+            <h2 className="mb-4 break-words font-display text-xl font-extrabold tracking-tight sm:text-2xl">
               <a href="#home">MARIO<span className="text-primary">.</span>SIANTURI</a>
             </h2>
             <p className="mb-8 max-w-sm text-base font-light leading-relaxed text-muted-foreground">Frontend and Full-Stack Developer building responsive web applications around real operational workflows.</p>
-            <p className="inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+            <p className="inline-flex max-w-full items-start gap-3 font-mono text-[10px] uppercase leading-5 tracking-[0.1em] text-muted-foreground sm:items-center sm:text-[11px] sm:tracking-[0.12em]">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
@@ -71,7 +71,7 @@ export default function Footer() {
             </div>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.15em] text-muted-foreground transition-colors duration-300 hover:text-primary"
+              className="group inline-flex min-h-11 items-center gap-2 font-mono text-[11px] uppercase tracking-[0.15em] text-muted-foreground transition-colors duration-300 hover:text-primary"
               aria-label="Back to top"
             >
               Back to top
@@ -89,14 +89,14 @@ export default function Footer() {
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           aria-hidden="true"
-          className="select-none text-center font-display text-[13.5vw] font-extrabold uppercase leading-[0.85] tracking-tight text-foreground/[0.07]"
+          className="select-none break-words text-center font-display text-[clamp(2.75rem,13.5vw,12rem)] font-extrabold uppercase leading-[0.85] tracking-tight text-foreground/[0.07]"
         >
           Sianturi
         </motion.div>
       </div>
 
       <div className="border-t border-border/10">
-        <div className="container-custom flex flex-col items-center justify-between gap-4 py-7 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground md:flex-row">
+        <div className="container-custom flex flex-col items-center justify-between gap-4 py-6 text-center font-mono text-[10px] uppercase leading-5 tracking-[0.1em] text-muted-foreground sm:py-7 sm:text-[11px] sm:tracking-[0.12em] md:flex-row md:text-left">
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
             <p>© {currentYear} Mario Sianturi</p>
             <span className="inline-flex items-center gap-1.5"><Eye className="h-3.5 w-3.5 text-primary/70" />{visitorCount.toLocaleString()} visits</span>

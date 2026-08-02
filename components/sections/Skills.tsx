@@ -46,7 +46,7 @@ export default function Skills() {
   const { t } = useLanguage()
 
   return (
-    <section id="skills" className="relative bg-background py-28 md:py-36">
+    <section id="skills" className="relative bg-background py-20 sm:py-24 md:py-36">
       <div className="container-custom relative z-10">
         {/* ── Header ── */}
         <motion.div
@@ -54,11 +54,11 @@ export default function Skills() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.7, ease: EASE }}
-          className="mb-20 flex flex-wrap items-end justify-between gap-8"
+          className="mb-14 flex min-w-0 flex-col items-start gap-5 sm:mb-16 lg:mb-20 lg:flex-row lg:items-end lg:justify-between lg:gap-8"
         >
           <div>
             <p className="section-label mb-5">03 / {t.skills.badge}</p>
-            <h2 className="font-display text-4xl font-extrabold uppercase tracking-tight md:text-5xl lg:text-6xl">
+            <h2 className="break-words font-display text-[clamp(2.25rem,10vw,3.75rem)] font-extrabold uppercase leading-[1.02] tracking-tight md:text-5xl lg:text-6xl">
               {t.skills.title}
             </h2>
           </div>
@@ -68,7 +68,7 @@ export default function Skills() {
         </motion.div>
 
         {/* ── Groups ── */}
-        <div className="space-y-20">
+        <div className="space-y-14 sm:space-y-16 lg:space-y-20">
           {skillGroups.map((group) => (
             <motion.section
               key={group.id}
@@ -79,16 +79,16 @@ export default function Skills() {
               aria-labelledby={`skill-group-${group.id}`}
             >
               {/* Group header */}
-              <div className="mb-10 grid gap-4 border-t border-border/10 pt-8 md:grid-cols-[auto_1fr_auto] md:items-baseline md:gap-10">
+              <div className="mb-8 grid min-w-0 gap-3 border-t border-border/10 pt-6 sm:mb-10 sm:gap-4 sm:pt-8 lg:grid-cols-[auto_minmax(0,1fr)_minmax(0,28rem)] lg:items-baseline lg:gap-10">
                 <span className="font-mono text-xs tracking-[0.15em] text-primary">{groupCodes[group.id]}</span>
-                <h3 id={`skill-group-${group.id}`} className="font-display text-2xl font-extrabold uppercase tracking-tight md:text-4xl">
+                <h3 id={`skill-group-${group.id}`} className="min-w-0 break-words font-display text-2xl font-extrabold uppercase leading-tight tracking-tight sm:text-3xl lg:text-4xl">
                   {group.title}
                 </h3>
                 <p className="max-w-md text-sm font-light leading-7 text-muted-foreground">{group.description}</p>
               </div>
 
               {/* Skills grid */}
-              <div className="grid gap-x-10 gap-y-12 lg:grid-cols-3">
+              <div className="grid min-w-0 gap-x-10 gap-y-9 sm:gap-y-12 md:grid-cols-2 lg:grid-cols-3">
                 {group.skills.map((skill, skillIndex) => (
                   <motion.article
                     key={skill.name}
@@ -96,23 +96,23 @@ export default function Skills() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: skillIndex * 0.08, duration: 0.5, ease: EASE }}
-                    className="border-t border-border/10 pt-6"
+                    className="min-w-0 border-t border-border/10 pt-5 sm:pt-6"
                   >
-                    <h4 className="font-display text-xl font-bold uppercase tracking-tight">
+                    <h4 className="break-words font-display text-xl font-bold uppercase leading-tight tracking-tight">
                       {skill.name}
                     </h4>
                     <p className="mt-3 text-sm font-light leading-7 text-muted-foreground">{skill.summary}</p>
 
                     {/* Evidence — text links dengan arrow */}
-                    <div className="mt-6 space-y-4">
+                    <div className="mt-5 space-y-3 sm:mt-6 sm:space-y-4">
                       {skill.evidence.map((item) => (
                         <a
                           key={`${skill.name}-${item.project}`}
                           href="#projects"
                           className="group/evidence block"
                         >
-                          <span className="flex items-center justify-between gap-3">
-                            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-primary">
+                          <span className="flex min-w-0 items-start justify-between gap-3">
+                            <span className="min-w-0 break-words font-mono text-[10px] uppercase leading-5 tracking-[0.1em] text-primary sm:text-[11px] sm:tracking-[0.12em]">
                               {item.project}
                             </span>
                             <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground transition-all duration-300 group-hover/evidence:translate-x-0.5 group-hover/evidence:-translate-y-0.5 group-hover/evidence:text-primary" />
@@ -136,14 +136,14 @@ export default function Skills() {
       </div>
 
       {/* ── Working toolkit marquee ── */}
-      <div className="mt-24 border-y border-border/10 py-8">
+      <div className="mt-16 border-y border-border/10 py-6 sm:mt-20 sm:py-8 lg:mt-24">
         <div className="container-custom mb-6 text-center font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
           Working toolkit
         </div>
         <div className="sr-only">
           {toolkitLogos.map((item) => <span key={item.name}>{item.name} </span>)}
         </div>
-        <div aria-hidden="true" className="space-y-6">
+        <div aria-hidden="true" className="space-y-4 sm:space-y-6">
           <LogoMarqueeRow logos={toolkitLogos.slice(0, 6)} duration={26} />
           <LogoMarqueeRow logos={toolkitLogos.slice(6)} duration={32} reverse />
         </div>
@@ -165,10 +165,10 @@ function LogoMarqueeRow({
 
   return (
     <div className="relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-background to-transparent md:w-40" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-24 bg-gradient-to-l from-background to-transparent md:w-40" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-background to-transparent sm:w-24 md:w-40" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-background to-transparent sm:w-24 md:w-40" />
       <motion.div
-        className="flex w-max gap-14 px-7 md:gap-20"
+        className="flex w-max gap-10 px-5 sm:gap-14 sm:px-7 md:gap-20"
         animate={{ x: reverse ? ["-50%", "0%"] : ["0%", "-50%"] }}
         transition={{ duration, repeat: Infinity, ease: "linear" }}
       >
@@ -177,9 +177,9 @@ function LogoMarqueeRow({
           return (
             <span
               key={`${item.name}-${index}`}
-              className="flex h-12 w-12 cursor-default items-center justify-center text-muted-foreground/40 transition-all duration-500 hover:text-foreground md:h-14 md:w-14"
+              className="flex h-11 w-11 cursor-default items-center justify-center text-muted-foreground/40 transition-all duration-500 hover:text-foreground sm:h-12 sm:w-12 md:h-14 md:w-14"
             >
-              <Icon className="h-9 w-9 md:h-11 md:w-11" />
+              <Icon className="h-8 w-8 sm:h-9 sm:w-9 md:h-11 md:w-11" />
             </span>
           )
         })}

@@ -1,161 +1,252 @@
 "use client"
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Preloader.tsx — "Cinematic Boot" (dark editorial)
-//
-//   0.0s  Layar ink, tech labels mono muncul stagger
-//   0.3s  Monogram MS. reveal
-//   1.0s  Counter mono 0→100 + garis progress lime tipis
-//   100%  Panel slide-up menghilang
-// ─────────────────────────────────────────────────────────────────────────────
+import { useEffect, useState } from "react"
+import { motion } from "framer-motion"
 
-import { useEffect, useState, useRef } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+const EASE = [0.16, 1, 0.3, 1] as const
+const CURTAIN_EASE = [0.76, 0, 0.24, 1] as const
 
-const TECH_TAGS = [
-  "Next.js", "React", "TypeScript", "Tailwind",
-  "Kotlin", "Firebase", "Python", "Figma",
-  "Node.js", "Git", "REST API", "PostgreSQL",
-]
+const FEATURED_WORK = [
+  "SIGAP UNDIP",
+  "OUTLET RECOGNITION",
+  "INTERNAL OPERATIONS",
+  "GASPOL SYSTEM",
+  "PREMIER LEAGUE",
+] as const
 
-const TAG_POSITIONS = [
-  { x: 10, y: 14 }, { x: 74, y: 10 }, { x: 16, y: 80 }, { x: 84, y: 74 },
-  { x: 6,  y: 46 }, { x: 90, y: 36 }, { x: 34, y: 90 }, { x: 62, y: 92 },
-  { x: 26, y: 24 }, { x: 66, y: 20 }, { x: 12, y: 62 }, { x: 80, y: 56 },
-]
+type Phase = "index" | "mark" | "exit" | "hidden"
 
 export default function Preloader() {
-  const [phase, setPhase]   = useState<"loading" | "done" | "hidden">("loading")
-  const [count, setCount]   = useState(0)
-  const [tagsMask, setTagsMask] = useState<boolean[]>(new Array(TECH_TAGS.length).fill(false))
-  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([])
+  const [phase, setPhase] = useState<Phase>("index")
 
-  // prefers-reduced-motion: skip preloader
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
-    if (mq.matches) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setPhase("hidden")
-      document.body.style.overflow = ""
+      return
     }
-  }, [])
 
-  // Lock scroll
-  useEffect(() => {
+    const root = document.documentElement
+    const previousRootOverflow = root.style.overflow
+    const previousRootOverscroll = root.style.overscrollBehavior
+    const previousBodyOverflow = document.body.style.overflow
+
+    root.style.overflow = "hidden"
+    root.style.overscrollBehavior = "none"
     document.body.style.overflow = "hidden"
-    return () => { document.body.style.overflow = "" }
-  }, [])
 
-  useEffect(() => {
-    const timers = timersRef.current
+    const showMarkTimer = window.setTimeout(() => setPhase("mark"), 1200)
+    const startExitTimer = window.setTimeout(() => setPhase("exit"), 1650)
+    const restoreScroll = () => {
+      root.style.overflow = previousRootOverflow
+      root.style.overscrollBehavior = previousRootOverscroll
+      document.body.style.overflow = previousBodyOverflow
+    }
 
-    TECH_TAGS.forEach((_, i) => {
-      timers.push(setTimeout(() => {
-        setTagsMask(prev => {
-          const next = [...prev]
-          next[i] = true
-          return next
-        })
-      }, 300 + i * 70))
-    })
+    const hideTimer = window.setTimeout(() => {
+      restoreScroll()
+      setPhase("hidden")
+    }, 2450)
 
-    timers.push(setTimeout(() => {
-      let start: number | null = null
-      const duration = 1000
-      const step = (timestamp: number) => {
-        if (!start) start = timestamp
-        const progress = Math.min((timestamp - start) / duration, 1)
-        const eased = 1 - Math.pow(1 - progress, 3)
-        setCount(Math.round(eased * 100))
-        if (progress < 1) requestAnimationFrame(step)
-        else {
-          timers.push(setTimeout(() => setPhase("done"), 350))
-          timers.push(setTimeout(() => setPhase("hidden"), 1400))
-        }
-      }
-      requestAnimationFrame(step)
-    }, 1100))
-
-    return () => timers.forEach(clearTimeout)
+    return () => {
+      window.clearTimeout(showMarkTimer)
+      window.clearTimeout(startExitTimer)
+      window.clearTimeout(hideTimer)
+      restoreScroll()
+    }
   }, [])
 
   if (phase === "hidden") return null
 
+  const showingIndex = phase === "index"
+  const showingMark = phase === "mark"
+  const exiting = phase === "exit"
+
   return (
-    <AnimatePresence>
-      {(phase === "loading" || phase === "done") && (
-        <motion.div
-          className="fixed inset-0 z-[99999] flex items-center justify-center bg-background"
-          aria-hidden="true"
-          exit={{ y: "-100%" }}
-          animate={phase === "done" ? { y: "-100%" } : { y: 0 }}
-          transition={phase === "done" ? { duration: 0.8, ease: [0.76, 0, 0.24, 1] } : { duration: 0 }}
-        >
-          {/* Tech labels mono */}
-          <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            {TECH_TAGS.map((tag, i) => (
-              <motion.span
-                key={tag}
-                className="absolute font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground/40"
-                style={{
-                  left: `${TAG_POSITIONS[i]?.x ?? 50}%`,
-                  top: `${TAG_POSITIONS[i]?.y ?? 50}%`,
-                  transform: "translate(-50%, -50%)",
-                }}
-                initial={{ opacity: 0 }}
-                animate={tagsMask[i] ? { opacity: 1 } : { opacity: 0 }}
-                transition={{ duration: 0.4 }}
-              >
-                {tag}
-              </motion.span>
-            ))}
-          </div>
+    <div
+      className="fixed inset-0 z-[99999] min-h-[100dvh] overflow-hidden motion-reduce:hidden"
+      aria-hidden="true"
+      data-preloader="featured-work-index"
+    >
+      <motion.div
+        className="absolute inset-x-0 top-0 z-10 h-1/2 bg-background"
+        initial={{ y: 0 }}
+        animate={exiting ? { y: "-100%" } : { y: 0 }}
+        transition={{
+          duration: 0.72,
+          ease: CURTAIN_EASE,
+          delay: exiting ? 0.04 : 0,
+        }}
+      />
 
-          {/* Center content */}
-          <div className="relative z-10 flex select-none flex-col items-center gap-8">
+      <motion.div
+        className="absolute inset-x-0 bottom-0 z-10 h-1/2 bg-background"
+        initial={{ y: 0 }}
+        animate={exiting ? { y: "100%" } : { y: 0 }}
+        transition={{
+          duration: 0.72,
+          ease: CURTAIN_EASE,
+          delay: exiting ? 0.04 : 0,
+        }}
+      />
+
+      <motion.div
+        className="absolute inset-0 z-20 flex min-h-[100dvh] flex-col bg-background px-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[max(1.25rem,env(safe-area-inset-top))] sm:px-8 sm:pb-8 sm:pt-8 lg:px-12 lg:pb-10 lg:pt-10"
+        animate={exiting ? { opacity: 0 } : { opacity: 1 }}
+        transition={{ duration: 0.18, ease: "easeOut" }}
+      >
+        <header className="flex items-start justify-between gap-1 sm:gap-6">
+          <motion.p
+            className="font-display text-sm font-extrabold uppercase tracking-[-0.02em] text-foreground sm:text-base"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: showingIndex ? 1 : 0, y: showingIndex ? 0 : -6 }}
+            transition={{ duration: 0.48, ease: EASE }}
+          >
+            Mario.Sianturi
+          </motion.p>
+
+          <motion.p
+            className="whitespace-nowrap text-right font-mono text-[9px] uppercase leading-relaxed tracking-[0.16em] text-muted-foreground sm:text-[10px] sm:tracking-[0.2em]"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: showingIndex ? 1 : 0, y: showingIndex ? 0 : -6 }}
+            transition={{ duration: 0.48, delay: 0.06, ease: EASE }}
+          >
+            <span className="hidden min-[360px]:inline">Portfolio </span>Index
+            <span className="ml-2 text-primary">/ 2026</span>
+          </motion.p>
+        </header>
+
+        <main className="relative flex min-h-0 flex-1 items-center justify-center py-5 sm:py-8">
+          <motion.section
+            className="w-full max-w-5xl"
+            initial={{ opacity: 1, scale: 1, y: 0 }}
+            animate={
+              showingIndex
+                ? { opacity: 1, scale: 1, y: 0 }
+                : { opacity: 0, scale: 0.9, y: -10 }
+            }
+            transition={{ duration: 0.42, ease: EASE }}
+          >
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              className="mb-3 flex items-end justify-between gap-5 sm:mb-4"
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="font-display text-5xl font-extrabold tracking-tight md:text-6xl"
+              transition={{ duration: 0.5, delay: 0.08, ease: EASE }}
             >
-              MS<span className="text-primary">.</span>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary sm:text-xs sm:tracking-[0.22em]">
+                Selected work
+              </p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:text-xs sm:tracking-[0.22em]">
+                05 case studies
+              </p>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.9 }}
-              className="flex w-64 flex-col items-center gap-4 md:w-80"
-            >
-              {/* Progress line */}
-              <div className="relative h-px w-full bg-border/15">
-                <div
-                  className="absolute inset-y-0 left-0 bg-primary"
-                  style={{ width: `${count}%` }}
-                />
-              </div>
+            <div className="relative overflow-hidden border-b border-foreground/10">
+              <motion.div
+                className="pointer-events-none absolute inset-x-0 z-20 h-px bg-primary"
+                initial={{ top: "0%", opacity: 0 }}
+                animate={{ top: ["0%", "100%"], opacity: [0, 1, 1, 0] }}
+                transition={{
+                  duration: 0.72,
+                  delay: 0.4,
+                  times: [0, 0.12, 0.88, 1],
+                  ease: "linear",
+                }}
+              />
 
-              <div className="flex w-full items-baseline justify-between">
-                <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-                  {count === 100 ? "Welcome" : "Loading"}
-                </span>
-                <span className="font-mono text-2xl font-bold text-foreground">
-                  {count.toString().padStart(3, "0")}
-                  <span className="ml-1 text-sm text-primary">%</span>
-                </span>
-              </div>
-            </motion.div>
-          </div>
+              <ol>
+                {FEATURED_WORK.map((project, index) => (
+                  <motion.li
+                    key={project}
+                    className="grid min-w-0 grid-cols-[2.5rem_minmax(0,1fr)] items-center border-t border-foreground/10 py-2.5 sm:grid-cols-[4.5rem_minmax(0,1fr)] sm:py-3 lg:grid-cols-[6rem_minmax(0,1fr)]"
+                    initial={{ opacity: 0, y: 18 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.52,
+                      delay: 0.14 + index * 0.07,
+                      ease: EASE,
+                    }}
+                  >
+                    <motion.span
+                      className="font-mono text-[10px] tracking-[0.16em] text-muted-foreground sm:text-xs sm:tracking-[0.2em]"
+                      animate={{
+                        color: [
+                          "hsl(var(--muted-foreground))",
+                          "hsl(var(--primary))",
+                          "hsl(var(--muted-foreground))",
+                        ],
+                      }}
+                      transition={{
+                        duration: 0.32,
+                        delay: 0.46 + index * 0.105,
+                        ease: "linear",
+                      }}
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </motion.span>
 
-          {/* Corner labels */}
-          <span className="absolute left-6 top-6 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50">
-            Portfolio v2.0
-          </span>
-          <span className="absolute bottom-6 right-6 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/50">
-            Jakarta, ID
-          </span>
-        </motion.div>
-      )}
-    </AnimatePresence>
+                    <div className="overflow-hidden">
+                      <motion.span
+                        className="block truncate font-display text-[clamp(0.75rem,3.6vw,0.9rem)] font-extrabold uppercase leading-none tracking-[-0.025em] text-foreground sm:text-[clamp(1.5rem,3.2vw,2.6rem)]"
+                        initial={{ y: "115%" }}
+                        animate={{ y: 0 }}
+                        transition={{
+                          duration: 0.58,
+                          delay: 0.16 + index * 0.07,
+                          ease: EASE,
+                        }}
+                      >
+                        {project}
+                      </motion.span>
+                    </div>
+                  </motion.li>
+                ))}
+              </ol>
+            </div>
+          </motion.section>
+
+          <motion.div
+            className="pointer-events-none absolute inset-0 flex items-center justify-center"
+            initial={{ opacity: 0, scale: 0.86 }}
+            animate={
+              showingMark
+                ? { opacity: 1, scale: 1 }
+                : { opacity: 0, scale: exiting ? 1.04 : 0.86 }
+            }
+            transition={{ duration: 0.44, ease: EASE }}
+          >
+            <div className="relative select-none text-center">
+              <div className="overflow-hidden">
+                <motion.p
+                  className="font-display text-[clamp(4rem,18vw,10rem)] font-extrabold leading-[0.78] tracking-[-0.08em] text-foreground"
+                  initial={{ y: "105%" }}
+                  animate={{ y: showingMark ? 0 : "105%" }}
+                  transition={{ duration: 0.48, ease: EASE }}
+                >
+                  MS<span className="text-primary">.</span>
+                </motion.p>
+              </div>
+              <motion.p
+                className="mt-5 font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground sm:text-[10px]"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: showingMark ? 1 : 0, y: showingMark ? 0 : 6 }}
+                transition={{ duration: 0.32, delay: showingMark ? 0.12 : 0 }}
+              >
+                Frontend / Full-Stack Developer
+              </motion.p>
+            </div>
+          </motion.div>
+        </main>
+
+        <motion.footer
+          className="flex items-end justify-between gap-6 font-mono text-[9px] uppercase leading-relaxed tracking-[0.16em] text-muted-foreground sm:text-[10px] sm:tracking-[0.2em]"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: showingIndex ? 1 : 0, y: showingIndex ? 0 : 6 }}
+          transition={{ duration: 0.42, delay: 0.16, ease: EASE }}
+        >
+          <span>Frontend / Full-Stack</span>
+          <span className="text-right">Jakarta, ID</span>
+        </motion.footer>
+      </motion.div>
+    </div>
   )
 }

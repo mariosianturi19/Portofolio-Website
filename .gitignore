@@ -29,6 +29,10 @@ yarn-error.log*
 .env.local
 .env*.local
 
+# local planning artifacts
+/DESIGN_SYSTEM.md
+/mockups/
+
 # vercel
 .vercel
 

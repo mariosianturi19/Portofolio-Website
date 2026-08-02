@@ -1,8 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, type MouseEvent } from "react"
 import { ArrowUpRight, Menu, X } from "lucide-react"
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } from "framer-motion"
+import { useLenis } from "lenis/react"
 import { useLanguage } from "@/components/LanguageProvider"
 import { cn } from "@/lib/utils"
 
@@ -13,6 +14,7 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
   const { t } = useLanguage()
+  const lenis = useLenis()
   const { scrollY, scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 })
 
@@ -45,6 +47,21 @@ export default function Navbar() {
     return () => { document.body.style.overflow = "" }
   }, [isOpen])
 
+  const handleMobileNavigation = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    event.preventDefault()
+    setIsOpen(false)
+
+    window.requestAnimationFrame(() => {
+      const target = document.querySelector<HTMLElement>(href)
+      if (target && lenis) {
+        lenis.scrollTo(target, { immediate: true, force: true })
+      } else {
+        target?.scrollIntoView({ behavior: "auto", block: "start" })
+      }
+      window.history.replaceState(null, "", href)
+    })
+  }
+
   return (
     <>
       {/* Scroll progress — garis lime tipis */}
@@ -62,8 +79,8 @@ export default function Navbar() {
           isScrolled && "border-b border-border/10 bg-background/80 backdrop-blur-xl",
         )}
       >
-        <div className="container-custom flex items-center justify-between py-5">
-          <a href="#home" className="font-display text-base font-extrabold tracking-tight sm:text-lg">
+        <div className="container-custom flex min-w-0 items-center justify-between gap-3 py-4 sm:py-5">
+          <a href="#home" className="min-w-0 truncate font-display text-sm font-extrabold tracking-tight sm:text-lg">
             MARIO<span className="text-primary">.</span>SIANTURI
           </a>
 
@@ -112,7 +129,7 @@ export default function Navbar() {
 
           <button
             onClick={() => setIsOpen(true)}
-            className="flex h-11 w-11 items-center justify-center lg:hidden"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full lg:hidden"
             aria-label="Open menu"
           >
             <Menu className="h-6 w-6" />
@@ -128,22 +145,22 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[70] flex flex-col bg-background lg:hidden"
+            className="fixed inset-0 z-[70] flex min-h-[100dvh] min-w-0 flex-col overflow-hidden bg-background lg:hidden"
           >
-            <div className="container-custom flex items-center justify-between py-5">
-              <span className="font-display text-base font-extrabold tracking-tight">
+            <div className="container-custom flex min-w-0 items-center justify-between gap-3 py-4 sm:py-5">
+              <span className="min-w-0 truncate font-display text-sm font-extrabold tracking-tight sm:text-base">
                 MARIO<span className="text-primary">.</span>SIANTURI
               </span>
               <button
                 onClick={() => setIsOpen(false)}
-                className="flex h-11 w-11 items-center justify-center"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
                 aria-label="Close menu"
               >
                 <X className="h-6 w-6" />
               </button>
             </div>
 
-            <nav className="container-custom flex flex-1 flex-col justify-center gap-2" aria-label="Mobile navigation">
+            <nav className="container-custom flex min-h-0 flex-1 flex-col justify-center gap-1 overflow-y-auto py-3 sm:gap-2" aria-label="Mobile navigation">
               {navLinks.map((link, index) => {
                 const active = activeSection === link.href.slice(1)
                 return (
@@ -153,14 +170,14 @@ export default function Navbar() {
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.06 * index, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                    onClick={() => setIsOpen(false)}
+                    onClick={(event) => handleMobileNavigation(event, link.href)}
                     className={cn(
-                      "group flex items-baseline gap-4 border-b border-border/10 py-4",
+                      "group flex min-h-14 min-w-0 items-baseline gap-3 border-b border-border/10 py-3 sm:gap-4 sm:py-4",
                       active ? "text-primary" : "text-foreground",
                     )}
                   >
                     <span className="font-mono text-xs text-primary">{String(index + 1).padStart(2, "0")}</span>
-                    <span className="font-display text-3xl font-extrabold uppercase tracking-tight transition-transform duration-300 group-hover:translate-x-2">
+                    <span className="min-w-0 break-words font-display text-[clamp(1.75rem,9vw,2.25rem)] font-extrabold uppercase leading-none tracking-tight transition-transform duration-300 group-hover:translate-x-2">
                       {link.name}
                     </span>
                   </motion.a>
@@ -172,7 +189,7 @@ export default function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="container-custom flex items-center justify-between py-6 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground"
+              className="container-custom flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-5 font-mono text-[10px] uppercase tracking-[0.1em] text-muted-foreground sm:text-[11px] sm:tracking-[0.12em]"
             >
               <span className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-primary" />

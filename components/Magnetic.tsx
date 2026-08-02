@@ -5,8 +5,17 @@
 
 import { useRef, type ReactNode } from "react"
 import { motion, useMotionValue, useSpring } from "framer-motion"
+import { cn } from "@/lib/utils"
 
-export default function Magnetic({ children, strength = 0.25 }: { children: ReactNode; strength?: number }) {
+export default function Magnetic({
+  children,
+  strength = 0.25,
+  className,
+}: {
+  children: ReactNode
+  strength?: number
+  className?: string
+}) {
   const ref = useRef<HTMLDivElement>(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -27,7 +36,8 @@ export default function Magnetic({ children, strength = 0.25 }: { children: Reac
       ref={ref}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
-      style={{ x: sx, y: sy, display: "inline-block" }}
+      className={cn("inline-block", className)}
+      style={{ x: sx, y: sy }}
     >
       {children}
     </motion.div>

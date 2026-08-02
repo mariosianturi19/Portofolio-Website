@@ -32,10 +32,16 @@
     @apply border-border/10;
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply min-w-0 bg-background text-foreground antialiased;
   }
   html {
     scroll-behavior: smooth;
+  }
+
+  body,
+  main,
+  section {
+    min-width: 0;
   }
 
   /* Focus visible — lime outline */
@@ -94,13 +100,17 @@ body[data-project-modal-open="true"] .back-to-top {
 /* Spec-sheet block — mono LABEL / value rows with a left rule */
 @layer components {
   .spec-sheet {
-    @apply border-l border-[hsl(var(--border)/0.15)] pl-5 font-mono text-xs leading-[2.1];
+    @apply w-full min-w-0 border-l border-[hsl(var(--border)/0.15)] pl-4 font-mono text-[11px] leading-[1.9] sm:pl-5 sm:text-xs sm:leading-[2.1];
+  }
+  .spec-sheet > div {
+    @apply grid min-w-0 grid-cols-[4rem_minmax(0,1fr)] gap-x-3 sm:grid-cols-[5rem_minmax(0,1fr)] sm:gap-x-4;
   }
   .spec-sheet .spec-key {
-    @apply mr-4 inline-block w-20 uppercase tracking-[0.1em] text-muted-foreground;
+    @apply w-auto uppercase tracking-[0.1em] text-muted-foreground;
   }
   .spec-sheet .spec-value {
-    @apply text-foreground;
+    @apply min-w-0 text-foreground;
+    overflow-wrap: anywhere;
   }
 }
 
@@ -121,18 +131,28 @@ body[data-project-modal-open="true"] .back-to-top {
 
 /* Improved container sizes */
 .container-custom {
-  @apply mx-auto px-6 sm:px-8 lg:px-12 xl:px-16 2xl:px-20;
+  @apply mx-auto w-full min-w-0 px-5 sm:px-8 lg:px-12 xl:px-16 2xl:px-20;
   max-width: 1400px;
 }
 
 .container-section {
-  @apply mx-auto px-6 sm:px-8 lg:px-16 xl:px-20 2xl:px-24;
+  @apply mx-auto w-full min-w-0 px-5 sm:px-8 lg:px-16 xl:px-20 2xl:px-24;
   max-width: 1200px;
 }
 
 /* Section spacing */
 .section-padding {
-  @apply py-20 lg:py-24 xl:py-28;
+  @apply py-20 md:py-24 xl:py-28;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-marquee {
+    animation: none;
+  }
 }
 
 /* Print Styles */

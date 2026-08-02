@@ -60,7 +60,7 @@ export default function ScrollProgress() {
           animate={{ opacity: 1, x: 0  }}
           exit={  { opacity: 0, x: 20  }}
           transition={{ duration: 0.4, type: "spring", stiffness: 200 }}
-          className="fixed right-5 top-1/2 -translate-y-1/2 z-40 flex flex-col items-end gap-2.5 hidden lg:flex"
+          className="fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-end gap-2.5 lg:flex"
         >
           {SECTIONS.map((section, i) => {
             const isActive  = activeSection === section.id

@@ -5,6 +5,7 @@ import { Inter_Tight, JetBrains_Mono, Syne } from 'next/font/google';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { LanguageProvider } from '@/components/LanguageProvider';
 import Navbar from '@/components/Navbar';
+import Preloader from '@/components/Preloader';
 import CustomCursor from '@/components/CustomCursor';
 import ScrollProgress from '@/components/ScrollProgress';
 import BackToTop from '@/components/BackToTop';
@@ -96,6 +97,7 @@ export default function RootLayout({
         >
           <LanguageProvider>
             <SmoothScrollProvider>
+              <Preloader />
               <CustomCursor />
               <ScrollProgress />
               <BackToTop />

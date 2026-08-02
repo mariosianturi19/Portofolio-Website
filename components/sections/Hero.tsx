@@ -34,27 +34,33 @@ export default function Hero() {
   }
 
   return (
-    <section id="home" className="relative flex min-h-screen flex-col justify-center overflow-hidden bg-background pb-24 pt-28">
-      <div className="container-custom relative z-10">
+    <section id="home" className="relative flex min-h-[100svh] min-w-0 flex-col justify-center overflow-hidden bg-background pb-24 pt-24 sm:pt-28 md:min-h-screen">
+      <div className="container-custom relative z-10 min-w-0">
         {/* Kicker */}
         <motion.p
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.7, ease: "easeOut" }}
-          className="section-label mb-8"
+          className="section-label mb-6 break-words sm:mb-8"
         >
           {t.hero.badge}
         </motion.p>
 
         {/* Headline — mask reveal per baris */}
-        <h1 className="font-display text-[2.75rem] font-extrabold uppercase leading-[1.02] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
-          <span className="block overflow-hidden">
+        <h1 className="min-w-0 font-display text-[clamp(1.75rem,8vw,3.5rem)] font-extrabold uppercase leading-[1.02] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
+          <span className="hidden overflow-hidden sm:block">
             <motion.span custom={0} variants={lineVariants} initial="hidden" animate="visible" className="block">
               Frontend &amp;
             </motion.span>
           </span>
+          <span className="block overflow-hidden sm:hidden">
+            <motion.span custom={0} variants={lineVariants} initial="hidden" animate="visible" className="block whitespace-nowrap">
+              Frontend
+            </motion.span>
+          </span>
           <span className="block overflow-hidden">
-            <motion.span custom={1} variants={lineVariants} initial="hidden" animate="visible" className="text-outline block">
+            <motion.span custom={1} variants={lineVariants} initial="hidden" animate="visible" className="text-outline block whitespace-nowrap">
+              <span className="mr-2 inline-block align-top font-mono text-sm font-bold text-primary [-webkit-text-stroke:0] sm:hidden">&amp;</span>
               Full-Stack
             </motion.span>
           </span>
@@ -70,10 +76,10 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9, duration: 0.7, ease: "easeOut" }}
-          className="mt-14 flex flex-wrap items-end justify-between gap-10"
+          className="mt-10 flex min-w-0 flex-col items-stretch gap-8 sm:mt-12 lg:mt-14 lg:flex-row lg:flex-wrap lg:items-end lg:justify-between lg:gap-10"
         >
           {/* Spec sheet — pinjaman arah 2 */}
-          <div className="spec-sheet">
+          <div className="spec-sheet max-w-md lg:w-auto">
             <div><span className="spec-key">Role</span><span className="spec-value">Frontend / Full-Stack</span></div>
             <div><span className="spec-key">Stack</span><span className="spec-value">React · Next.js · TS · Node</span></div>
             <div><span className="spec-key">Base</span><span className="spec-value">Jakarta, ID</span></div>
@@ -86,14 +92,14 @@ export default function Hero() {
             </div>
           </div>
 
-          <p className="max-w-md text-base font-light leading-relaxed text-muted-foreground">
+          <p className="w-full max-w-md text-base font-light leading-relaxed text-muted-foreground">
             {t.hero.description}
           </p>
 
-          <div className="flex items-center gap-5">
-            <Magnetic>
-              <Button size="lg" className="group text-base" asChild>
-                <a href="#projects" className="flex items-center">
+          <div className="flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-5 lg:w-auto">
+            <Magnetic className="w-full sm:w-auto">
+              <Button size="lg" className="group w-full text-base sm:w-auto" asChild>
+                <a href="#projects" className="flex items-center justify-center">
                   {t.hero.viewProjects}
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </a>
@@ -102,7 +108,7 @@ export default function Hero() {
             <a
               href="/Togar-Anthony-Mario-Sianturi-CV.pdf"
               download
-              className="group flex items-center gap-2 border-b border-border/30 pb-1 font-mono text-xs uppercase tracking-[0.12em] transition-colors hover:border-primary hover:text-primary"
+              className="group inline-flex min-h-11 items-center justify-center gap-2 border-b border-border/30 py-2.5 font-mono text-xs uppercase tracking-[0.12em] transition-colors hover:border-primary hover:text-primary"
             >
               <Download className="h-3.5 w-3.5 transition-transform group-hover:translate-y-0.5" />
               {t.hero.downloadCV}
@@ -112,7 +118,7 @@ export default function Hero() {
 
         {/* Typed role — aksesibel (sr-only heading tetap ada) */}
         <h2 className="sr-only">{t.hero.role}</h2>
-        <div aria-hidden="true" className="mt-10 h-6 font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground">
+        <div aria-hidden="true" className="mt-8 min-h-6 break-words font-mono text-[11px] uppercase leading-5 tracking-[0.12em] text-muted-foreground sm:mt-10 sm:text-xs sm:tracking-[0.15em]">
           {typedText}
           <motion.span animate={{ opacity: [1, 0] }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} className="ml-1 text-primary">_</motion.span>
         </div>
