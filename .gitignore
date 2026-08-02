@@ -17,12 +17,16 @@
 
 # misc
 .DS_Store
+Thumbs.db
+desktop.ini
 *.pem
 
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+.eslintcache
 
 # local env files
 .env
@@ -32,6 +36,10 @@ yarn-error.log*
 # local planning artifacts
 /DESIGN_SYSTEM.md
 /mockups/
+/.claude/
+
+# local editor settings
+/.vscode/
 
 # vercel
 .vercel
