@@ -82,8 +82,7 @@ export default function ScrollProgress() {
                       animate={{ opacity: 1, x: 0 }}
                       exit={  { opacity: 0, x: 8 }}
                       transition={{ duration: 0.15 }}
-                      className="text-xs font-semibold text-foreground bg-background/90 backdrop-blur-sm
-                        border border-border/60 px-2.5 py-1 rounded-lg shadow-lg whitespace-nowrap"
+                      className="whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground"
                     >
                       {section.label}
                     </motion.span>
@@ -95,16 +94,14 @@ export default function ScrollProgress() {
                   className={cn(
                     "rounded-full transition-colors duration-300",
                     isActive
-                      ? "bg-primary shadow-lg shadow-primary/40"
-                      : isHovered
-                      ? "bg-foreground/50"
-                      : "bg-foreground/20 hover:bg-foreground/40"
+                      ? "bg-primary"
+                      : "bg-foreground/20 hover:bg-foreground/50"
                   )}
                   animate={{
-                    width:  isActive ? 20 : isHovered ? 10 : 6,
-                    height: isActive ? 6  : 6,
+                    width:  isActive ? 20 : 6,
+                    height: 6,
                   }}
-                  transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 28 }}
                 />
               </div>
             )

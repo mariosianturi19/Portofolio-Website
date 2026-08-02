@@ -19,12 +19,9 @@ const nextConfig = {
     ],
     formats: ['image/avif', 'image/webp'],
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  // ESLint & TypeScript checks aktif saat build - jangan disable ini!
+  // eslint: { ignoreDuringBuilds: true },   ← dihapus
+  // typescript: { ignoreBuildErrors: true }, ← dihapus
   // Performance optimizations
   compress: true,
   poweredByHeader: false,

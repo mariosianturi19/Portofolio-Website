@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arah 1 — Cinematic Dark Editorial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0F;
+    --ink: #EDEDF2;
+    --muted: #8B8B99;
+    --accent: #D4FF4F;
+    --line: rgba(237,237,242,.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter Tight', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+  a, button { cursor: none; }
+
+  /* ── Custom cursor ── */
+  .cursor {
+    position: fixed; z-index: 999; pointer-events: none;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent);
+    transform: translate(-50%, -50%);
+    transition: width .25s, height .25s, opacity .25s;
+    mix-blend-mode: difference;
+  }
+  .cursor.grow { width: 56px; height: 56px; }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed; inset: 0 0 auto 0; z-index: 50;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 28px 5vw;
+    font-size: 13px; letter-spacing: .12em; text-transform: uppercase;
+  }
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px; letter-spacing: .02em; }
+  .logo em { color: var(--accent); font-style: normal; }
+  nav ul { display: flex; gap: 34px; list-style: none; }
+  nav a { color: var(--muted); text-decoration: none; transition: color .3s; }
+  nav a:hover { color: var(--ink); }
+  .nav-cta {
+    color: var(--ink); text-decoration: none;
+    border: 1px solid rgba(237,237,242,.25); border-radius: 999px;
+    padding: 10px 22px;
+    transition: background .3s, color .3s, border-color .3s;
+  }
+  .nav-cta:hover { background: var(--accent); color: #0A0A0F; border-color: var(--accent); }
+
+  /* ── Hero ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 0 5vw; position: relative;
+  }
+  .kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 32px;
+    opacity: 0; animation: fadeUp .8s .3s ease-out forwards;
+  }
+  h1 {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(3rem, 9.5vw, 8.5rem);
+    line-height: .98; letter-spacing: -.03em;
+    text-transform: uppercase;
+  }
+  h1 .line { display: block; overflow: hidden; }
+  h1 .line span {
+    display: block;
+    transform: translateY(110%);
+    animation: rise 1s cubic-bezier(.16,1,.3,1) forwards;
+  }
+  h1 .line:nth-child(2) span { animation-delay: .15s; }
+  h1 .line:nth-child(3) span { animation-delay: .3s; }
+  h1 .outline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--ink);
+  }
+  @keyframes rise { to { transform: translateY(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+  .hero-bottom {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-top: 56px; gap: 40px; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp .8s .8s ease-out forwards;
+  }
+  .hero-desc { max-width: 420px; color: var(--muted); font-size: 17px; line-height: 1.7; font-weight: 300; }
+  .hero-desc strong { color: var(--ink); font-weight: 500; }
+
+  .btn-row { display: flex; gap: 18px; align-items: center; }
+  .btn-primary {
+    position: relative; display: inline-block;
+    background: var(--accent); color: #0A0A0F;
+    font-weight: 500; font-size: 15px; text-decoration: none;
+    padding: 18px 36px; border-radius: 999px;
+    transition: transform .3s cubic-bezier(.16,1,.3,1);
+  }
+  .btn-ghost {
+    color: var(--ink); font-size: 15px; text-decoration: none;
+    border-bottom: 1px solid rgba(237,237,242,.3);
+    padding-bottom: 4px; transition: border-color .3s;
+  }
+  .btn-ghost:hover { border-color: var(--accent); }
+
+  /* ── Marquee strip ── */
+  .strip {
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    overflow: hidden; padding: 20px 0;
+    position: absolute; bottom: 0; left: 0; right: 0;
+  }
+  .strip-track {
+    display: flex; gap: 48px; width: max-content;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
+    animation: marquee 22s linear infinite;
+  }
+  .strip-track i { color: var(--accent); font-style: normal; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  @media (max-width: 720px) {
+    body { cursor: auto; }
+    a, button { cursor: pointer; }
+    .cursor { display: none; }
+    nav ul { display: none; }
+    .hero-bottom { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+
+  <nav>
+    <div class="logo">MARIO<em>.</em>SIANTURI</div>
+    <ul>
+      <li><a href="#">Work</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Experience</a></li>
+    </ul>
+    <a class="nav-cta" href="#">Contact</a>
+  </nav>
+
+  <section class="hero">
+    <p class="kicker">Available for developer roles — 2026</p>
+    <h1>
+      <span class="line"><span>Frontend &amp;</span></span>
+      <span class="line"><span class="outline">Full-Stack</span></span>
+      <span class="line"><span>Developer</span></span>
+    </h1>
+    <div class="hero-bottom">
+      <p class="hero-desc">
+        Computer Engineering graduate building <strong>responsive, maintainable web applications</strong> with React, Next.js, TypeScript, and Node.js — from real operational workflows to clear interfaces.
+      </p>
+      <div class="btn-row">
+        <a class="btn-primary" href="#" data-magnet>View Case Studies</a>
+        <a class="btn-ghost" href="#">Download CV</a>
+      </div>
+    </div>
+
+    <div class="strip">
+      <div class="strip-track">
+        <span>React <i>/</i> Next.js <i>/</i> TypeScript <i>/</i> Node.js <i>/</i> PostgreSQL <i>/</i> Tailwind <i>/</i></span>
+        <span>React <i>/</i> Next.js <i>/</i> TypeScript <i>/</i> Node.js <i>/</i> PostgreSQL <i>/</i> Tailwind <i>/</i></span>
+      </div>
+    </div>
+  </section>
+
+<script>
+  // Custom cursor + magnetic button
+  const cursor = document.getElementById('cursor');
+  let cx = innerWidth/2, cy = innerHeight/2, tx = cx, ty = cy;
+  addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+  (function loop() {
+    cx += (tx - cx) * .18; cy += (ty - cy) * .18;
+    cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px';
+    requestAnimationFrame(loop);
+  })();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+  });
+  document.querySelectorAll('[data-magnet]').forEach(el => {
+    el.addEventListener('mousemove', e => {
+      const r = el.getBoundingClientRect();
+      const x = e.clientX - r.left - r.width/2, y = e.clientY - r.top - r.height/2;
+      el.style.transform = `translate(${x*.25}px, ${y*.25}px)`;
+    });
+    el.addEventListener('mouseleave', () => el.style.transform = '');
+  });
+</script>
+</body>
+</html>

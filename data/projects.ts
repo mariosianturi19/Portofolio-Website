@@ -1,6 +1,15 @@
-// file: data/projects.ts
+﻿// file: data/projects.ts
 
 export type Category = "All" | "Web" | "Mobile" | "Algorithm"
+
+export interface ProjectCaseStudy {
+  challenge: string
+  role: string
+  contributions: string[]
+  decisions: string[]
+  outcome: string
+  status?: string
+}
 
 export interface Project {
   id: number
@@ -9,6 +18,7 @@ export interface Project {
   longDescription?: string   // Panjang — untuk modal
   image: string              // Gambar utama
   screenshots?: string[]     // Array gambar untuk gallery di modal
+  imageFit?: "cover" | "contain"
   tags: string[]
   github: string
   liveUrl?: string           // Link demo/live jika ada
@@ -17,6 +27,7 @@ export interface Project {
   isCapstone?: boolean
   teamProject?: boolean
   highlights?: string[]      // Bullet poin fitur utama untuk modal
+  caseStudy?: ProjectCaseStudy
   year?: string
 }
 
@@ -27,12 +38,13 @@ export const projectsData: Project[] = [
     description: "Bangkit Capstone 2024 - Smart assistant mobile application for helping people with daily tasks using machine learning and AI technologies.",
     longDescription:
       "Si-Bantu is a Bangkit Academy 2024 Capstone Project — a smart AI-powered assistant mobile app built for Android. The application leverages TensorFlow Lite for on-device machine learning, Firebase for real-time database and authentication, and a custom-trained model to help users manage daily tasks intelligently. Developed as a team project with 6 members spanning Machine Learning, Cloud Computing, and Mobile Development paths.",
-    image: "https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?auto=format&fit=crop&w=800&h=600&q=80",
+    image: "/projects/sibantu-onboarding-1.png",
     screenshots: [
-      "https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?auto=format&fit=crop&w=800&h=600&q=80",
-      "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&h=600&q=80",
-      "https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=800&h=600&q=80",
+      "/projects/sibantu-onboarding-1.png",
+      "/projects/sibantu-onboarding-2.png",
+      "/projects/sibantu-onboarding-3.png",
     ],
+    imageFit: "contain",
     tags: ["Android", "Machine Learning", "TensorFlow", "Kotlin", "Firebase", "AI"],
     github: "https://github.com/indra1222/Bangkitcapstone",
     category: "Mobile",
@@ -51,76 +63,133 @@ export const projectsData: Project[] = [
   {
     id: 2,
     title: "SIGAP UNDIP",
-    description: "SIGAP UNDIP is an innovative digital platform designed to enhance emergency response and safety systems within Diponegoro University environment.",
+    description: "Multi-role campus emergency response frontend for students, volunteers, and administrators, with panic reporting, GPS capture, and incident workflows.",
     longDescription:
-      "SIGAP UNDIP is a comprehensive emergency response and campus safety platform built for Diponegoro University. The system enables students and staff to report incidents in real-time, track emergency response status, and access campus safety resources. Built with Next.js and TypeScript for a robust, type-safe codebase with a responsive UI optimized for mobile-first usage.",
+      "SIGAP UNDIP is a campus emergency response and safety platform designed around the different needs of students, volunteers, and administrators. The frontend brings panic reporting, structured incident reports, location capture, response tracking, and operational dashboards into one responsive web experience.",
     image: "/SIGAP.png",
     screenshots: [
       "/SIGAP.png",
       "/projects/s1.png",
       "/projects/s2.png",
     ],
-    tags: ["Next.js", "TypeScript", "React", "CSS"],
+    tags: ["Next.js", "TypeScript", "React", "Zod", "REST API"],
     github: "https://github.com/mariosianturi19/SIGAP-UNDIP",
     category: "Web",
     featured: true,
     year: "2024",
     highlights: [
-      "Real-time incident reporting system",
-      "Interactive campus map integration",
-      "Emergency contact directory",
-      "Mobile-responsive design",
-      "Role-based access for staff and students",
+      "Panic and structured incident-reporting flows",
+      "Browser geolocation permission and coordinate capture",
+      "Role-specific student, volunteer, and administrator workspaces",
+      "Report history, status tracking, and operational dashboards",
+      "Responsive interface designed for urgent mobile use",
     ],
+    caseStudy: {
+      challenge:
+        "Campus emergencies require a reporting flow that remains clear under pressure while giving response teams enough structured information to act. A single generic dashboard would not serve students, volunteers, and administrators equally well.",
+      role: "Project Lead & Front-End Developer",
+      contributions: [
+        "Designed role-specific journeys and responsive layouts for students, volunteers, and administrators.",
+        "Built panic and incident-reporting interfaces, report history, status views, and operational management screens.",
+        "Integrated browser geolocation so users can grant permission and attach coordinates to an emergency report.",
+        "Structured typed API integration and reusable UI patterns across reporting, response, and shift-management flows.",
+      ],
+      decisions: [
+        "Used Next.js App Router and TypeScript to keep role-based routes and shared data contracts maintainable.",
+        "Applied React Hook Form and Zod patterns for structured, predictable report input.",
+        "Prioritized mobile readability, explicit system states, and short action paths for urgent scenarios.",
+      ],
+      outcome:
+        "Delivered an end-to-end frontend implementation covering the core student reporting journey and the volunteer and administrator response workflows.",
+      status: "Source-backed frontend implementation; production deployment is not claimed.",
+    },
   },
   {
     id: 3,
     title: "Premier League Info System",
-    description: "Full-stack sports data platform delivering real-time Premier League data. Features a React frontend and robust Next.js API backend.",
+    description: "Responsive Premier League frontend for standings, fixtures, clubs, squads, and match administration, built around a teammate-provided API.",
     longDescription:
-      "A full-stack Premier League information platform that aggregates live match scores, player statistics, team standings, and fixture schedules. The frontend is built with React.js and TypeScript, while the backend leverages Next.js API routes to proxy and cache data from third-party football APIs. Features include live score updates, detailed player profiles, and historical match data.",
+      "Premier League Info System is a responsive sports-data frontend built with React, TypeScript, and Vite. It turns a teammate-provided API into a branded fan and administration experience for league standings, fixtures, club details, squad management, and score updates. The frontend source remains available, while the original external API is no longer online.",
     image: "/Premiere.png",
     screenshots: [
       "/Premiere.png",
       "/projects/p1.png",
       "/projects/p2.png",
     ],
-    tags: ["Next.js", "React.js", "TypeScript", "Full-Stack"],
+    tags: ["React", "TypeScript", "Vite", "REST API", "PWA"],
     github: "https://github.com/mariosianturi19/premiere-league-app",
     category: "Web",
     featured: true,
     year: "2024",
     highlights: [
-      "Real-time match scores via REST API",
-      "Comprehensive player & team statistics",
-      "Season standings with live updates",
-      "Server-side data caching for performance",
-      "Responsive design for all screen sizes",
+      "League table and recent-match dashboard",
+      "Fixtures scheduling and score-update interfaces",
+      "Club directory, club details, and squad management",
+      "Typed Axios integration with loading and feedback states",
+      "Responsive navigation and installable PWA configuration",
     ],
+    caseStudy: {
+      challenge:
+        "The project needed to turn several football data entities—clubs, players, fixtures, results, and standings—into a coherent interface that worked for both browsing and data-management tasks.",
+      role: "Front-End Developer in a team collaboration",
+      contributions: [
+        "Built the React application structure and routed experiences for Home, Clubs, Club Detail, Fixtures, and About.",
+        "Created responsive standings, match, club, and squad interfaces with reusable loading, modal, and feedback components.",
+        "Integrated typed REST endpoints for reading and managing teams, players, fixtures, scores, and standings.",
+        "Configured an installable PWA experience and a Premier League-inspired responsive visual system.",
+      ],
+      decisions: [
+        "Separated the Axios API client from page components so the frontend dependency remained easy to identify and replace.",
+        "Defined TypeScript models for teams, players, matches, and standings to keep cross-page rendering consistent.",
+        "Used explicit loading, success, error, and confirmation states for API-driven actions.",
+      ],
+      outcome:
+        "Completed a multi-page sports frontend that demonstrates API integration, responsive data presentation, and interactive CRUD workflows.",
+      status: "Frontend source preserved; the teammate-owned external API is no longer available.",
+    },
   },
   {
     id: 4,
     title: "GASPOL System",
-    description: "Comprehensive Sales Performance and Credit Simulation platform for Setir Kanan. Streamlines automotive sales with real-time financial calculations and lead management.",
+    description: "Full-stack automotive credit simulation workflow with financing calculations, budget matching, authentication, and persistent application history.",
     longDescription:
-      "GASPOL is a Progressive Web Application built for PT. Setir Kanan Indonesia — an automotive sales platform that streamlines the entire sales process. Sales agents can simulate credit schemes, calculate monthly installments in real-time, manage customer leads, and track performance metrics through a clean dashboard. Developed during internship at PT. Klik Digital Sinergi.",
+      "GASPOL is a full-stack credit simulation application for automotive sales workflows. It combines customer and vehicle input, configurable interest and insurance rates, installment calculations, budget-based recommendations, document attachments, and a persistent simulation history behind authenticated access.",
     image: "/Gaspol.png",
     screenshots: [
       "/Gaspol.png",
       "/projects/g1.png",
     ],
-    tags: ["Next.js", "TypeScript", "PWA", "Responsive Design"],
+    tags: ["Next.js", "TypeScript", "Prisma", "MySQL", "PWA"],
     github: "https://github.com/mariosianturi19/Gaspol",
     category: "Web",
     featured: true,
     year: "2025",
     highlights: [
-      "Real-time credit simulation engine",
-      "PWA with offline capability",
-      "Sales performance dashboard",
-      "Lead management system",
-      "Multi-device responsive design",
+      "Rule-based credit and insurance calculation engine",
+      "Budget solver for target down payment or installment",
+      "Authenticated simulation and history workflow",
+      "Prisma and MySQL persistence with status management",
+      "Attachment compression and installable PWA setup",
     ],
+    caseStudy: {
+      challenge:
+        "Automotive financing combines vehicle categories, down-payment rules, tenor, payment type, interest, insurance, and administrative fees. Sales users need fast estimates without losing the calculation detail required for review.",
+      role: "Full-Stack Developer",
+      contributions: [
+        "Built the credit simulation flow for customer, vehicle, financing, insurance, and attachment inputs.",
+        "Implemented calculation rules for down payment, principal, interest, insurance, monthly installment, and total first payment.",
+        "Added a budget solver that searches for a suitable down-payment percentage from a target TDP or monthly installment.",
+        "Implemented authenticated save, history, status-update, detail, and delete flows backed by Prisma and MySQL.",
+      ],
+      decisions: [
+        "Kept financial rules in a dedicated React hook so form state, calculations, and persistence remained separable.",
+        "Loaded interest and insurance rates from the database while retaining explicit handling for special financing scenarios.",
+        "Compressed image attachments in the browser before persistence and enforced payload-size safeguards.",
+      ],
+      outcome:
+        "Delivered an end-to-end workflow from secure login and financing calculation through saved simulation history and status review.",
+      status: "Full-stack local implementation; no public production deployment is claimed.",
+    },
   },
   {
     id: 5,
@@ -173,166 +242,89 @@ export const projectsData: Project[] = [
     ],
   },
   {
-    id: 7,
-    title: "Finance Tracker",
-    description: "Feature-rich personal finance management application for tracking expenses, budgeting, and analyzing spending patterns.",
-    longDescription:
-      "A full-stack personal finance tracker built with Next.js and TypeScript. Users can log income and expenses, set budget goals per category, and visualize their spending patterns through interactive charts. The application includes a dashboard overview, transaction history with filtering, and monthly reports with trend analysis.",
-    image: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=800&h=600&q=80",
-    screenshots: [
-      "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=800&h=600&q=80",
-      "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?auto=format&fit=crop&w=800&h=600&q=80",
-      "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&h=600&q=80",
-    ],
-    tags: ["Next.js", "TypeScript", "React.js", "Full-Stack"],
-    github: "https://github.com/mariosianturi19/Finance-Tracker",
-    category: "Web",
-    featured: true,
-    year: "2024",
-    highlights: [
-      "Income and expense transaction logging",
-      "Budget goals with visual progress tracking",
-      "Interactive spending charts (Recharts)",
-      "Category-based expense breakdown",
-      "Monthly financial reports and trends",
-    ],
-  },
-  {
-    id: 8,
-    title: "NBA App",
-    description: "React Native mobile application for NBA statistics and team information with modern UI.",
-    longDescription:
-      "A React Native mobile application that brings NBA statistics to your fingertips. Browse all 30 NBA teams, explore player rosters, view season averages, and check recent game scores. The app uses a third-party NBA stats API and features a clean, dark-themed UI inspired by the official NBA aesthetic.",
-    image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&h=600&q=80",
-    screenshots: [
-      "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&h=600&q=80",
-      "https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&w=800&h=600&q=80",
-      "https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?auto=format&fit=crop&w=800&h=600&q=80",
-    ],
-    tags: ["React Native", "JavaScript", "CSS"],
-    github: "https://github.com/mariosianturi19/NBA-App",
-    category: "Mobile",
-    featured: true,
-    year: "2023",
-    highlights: [
-      "All 30 NBA teams with full roster",
-      "Season averages and player statistics",
-      "Recent game scores and results",
-      "Dark-themed modern UI",
-      "Cross-platform iOS and Android",
-    ],
-  },
-  {
     id: 9,
-    title: "Klik Digital Dashboard",
-    description: "Professional dashboard website for PT. Klik Digital Sinergi with advanced analytics.",
+    title: "Hermes — Internal Operations System",
+    description: "Internal web application for PT. Klik Digital Sinergi that centralizes company, employee, correspondence, and employment-contract workflows.",
     longDescription:
-      "A professional internal dashboard developed during internship at PT. Klik Digital Sinergi. The dashboard centralizes business analytics, client management, and performance tracking for the digital agency. Built with Next.js and TypeScript, it features role-based access control, data visualization components, and a clean admin UI.",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&h=600&q=80",
+      "Hermes is an internal operations web application developed during my Front-End Developer internship at PT. Klik Digital Sinergi. It brings company records, employee data, correspondence, and PKS, PKWT, and PKWTT contract workflows into one responsive interface. The system uses reusable dashboards, searchable tables, status indicators, and structured forms to make administrative information easier to review and maintain.",
+    image: "/projects/klik-dashboard.png",
     screenshots: [
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&h=600&q=80",
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&h=600&q=80",
-      "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=800&h=600&q=80",
+      "/projects/klik-dashboard.png",
+      "/projects/klik-contracts.png",
     ],
-    tags: ["Next.js", "TypeScript", "CSS", "JavaScript"],
+    tags: ["Next.js", "TypeScript", "React", "Tailwind CSS", "CRUD Workflows"],
     github: "#",
     category: "Web",
     featured: true,
     year: "2025",
     highlights: [
-      "Business analytics visualization",
-      "Client project management interface",
-      "Role-based access control",
-      "Responsive admin dashboard layout",
-      "Performance metrics tracking",
+      "Dashboard summaries for active PKS, PKWT, and PKWTT contracts",
+      "Company, employee, and employment-contract management workflows",
+      "Searchable contract records with type, date, and status information",
+      "Reusable dashboard, table, form, and navigation components",
+      "Responsive layouts for desktop and mobile administration",
     ],
-  },
-  {
-    id: 10,
-    title: "Endorsement Website",
-    description: "Social media influencer endorsement platform with payment integration and user management.",
-    longDescription:
-      "A web platform connecting brands with social media influencers for endorsement campaigns. Brands can post campaign briefs, influencers can apply and submit content, and payments are processed through an integrated gateway. Built with PHP and MySQL as a full-stack project.",
-    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&h=600&q=80",
-    screenshots: [
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&h=600&q=80",
-      "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&h=600&q=80",
-    ],
-    tags: ["PHP", "MySQL", "HTML", "CSS", "JavaScript"],
-    github: "https://github.com/mariosianturi19/Endorsement_Website",
-    category: "Web",
-    year: "2023",
-    highlights: [
-      "Brand-influencer matching system",
-      "Campaign management workflow",
-      "Payment gateway integration",
-      "User role management (Brand / Influencer)",
-    ],
-  },
-  {
-    id: 11,
-    title: "Basketball Court Booking",
-    description: "Online basketball court booking system with real-time availability and payment processing.",
-    longDescription:
-      "An online booking platform for basketball courts that enables users to check real-time court availability, select time slots, and confirm reservations with payment. Built with PHP and MySQL, featuring a clean calendar-based availability view and admin panel for court management.",
-    image: "https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?auto=format&fit=crop&w=800&h=600&q=80",
-    screenshots: [
-      "https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?auto=format&fit=crop&w=800&h=600&q=80",
-      "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=800&h=600&q=80",
-    ],
-    tags: ["PHP", "HTML", "CSS", "JavaScript", "MySQL"],
-    github: "https://github.com/mariosianturi19/Booking-Basketball-Court",
-    category: "Web",
-    year: "2023",
-    highlights: [
-      "Real-time court availability calendar",
-      "Online booking and reservation system",
-      "Payment confirmation workflow",
-      "Admin panel for court management",
-    ],
+    caseStudy: {
+      challenge:
+        "Internal employment administration spans companies, employees, correspondence, and multiple contract subtypes. The interface needed to make dense operational records searchable and manageable without losing the existing Hermes workflow.",
+      role: "Front-End Developer Intern",
+      contributions: [
+        "Built responsive dashboard, table, form, search, pagination, and navigation patterns for internal administration.",
+        "Implemented company, employee, and contract-letter workflows, including PKS, PKWT, and PKWTT-specific fields.",
+        "Handled contract types, dates, statuses, record details, and CRUD feedback across the operational interface.",
+        "Later preserved the retired frontend by introducing deterministic local data and localStorage persistence behind the existing response contracts.",
+      ],
+      decisions: [
+        "Reused consistent table and form patterns so information-heavy modules remained predictable.",
+        "Kept the data adapter compatible with the original response shapes, isolating data-source changes from page components.",
+        "Preserved the original Hermes/Klik Digital visual identity while improving mobile dashboard usability.",
+      ],
+      outcome:
+        "The complete frontend workflow remains reviewable across dashboard, company, employee, and contract modules even though the legacy API is no longer used.",
+      status: "Original internal UI preserved locally with deterministic data; not presented as a production integration.",
+    },
   },
   {
     id: 12,
-    title: "Outlet Recognition Website",
-    description: "Website for outlet recognition using computer vision and machine learning algorithms.",
+    title: "Telkomsel Outlet Recognition",
+    description: "Browser-based field tool that identifies seven Indonesian provider brands from outlet signage using explainable color-signature evidence.",
     longDescription:
-      "A web-based outlet recognition system that uses computer vision techniques to identify and classify retail outlets from images. The system processes uploaded images through a Node.js backend and returns classification results with confidence scores.",
-    image: "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=800&h=600&q=80",
+      "Telkomsel Outlet Recognition is a web application developed to support outlet data sampling and analysis. Field users can capture an outlet sign with the camera or upload an existing image, then review an on-device classification supported by image-quality checks, dominant color clusters, confidence scoring, and visual evidence. The recognition scope covers Telkomsel, by.U, IM3, Tri, XL, AXIS, and Smartfren.",
+    image: "/projects/outlet-recognition.png",
     screenshots: [
-      "https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=800&h=600&q=80",
+      "/projects/outlet-recognition.png",
+      "/projects/outlet-scanner.png",
     ],
-    tags: ["Node.js", "HTML", "CSS", "JavaScript", "Computer Vision"],
+    tags: ["Next.js", "TypeScript", "Computer Vision", "Image Processing", "Canvas API"],
     github: "#",
     category: "Web",
-    year: "2023",
+    featured: true,
+    year: "2024",
     highlights: [
-      "Image upload and preprocessing pipeline",
-      "Computer vision classification model",
-      "Confidence score visualization",
-      "Batch processing capability",
+      "Camera capture and JPG, PNG, or WebP image upload",
+      "On-device image processing with no image retention",
+      "Recognition profiles for seven Indonesian provider brands",
+      "Dominant color, HSV, CIEDE2000, and paired-accent evidence",
+      "Image-quality safeguards and reviewable confidence results",
     ],
-  },
-  {
-    id: 13,
-    title: "Interpolation Algorithm",
-    description: "Python implementation of numerical interpolation algorithms for data science and computational mathematics.",
-    longDescription:
-      "A Python implementation of multiple numerical interpolation methods — including Lagrange, Newton's Divided Difference, and Linear Spline — applied to real-world datasets. The project is presented as a Jupyter Notebook with step-by-step mathematical explanations, visualizations using Matplotlib, and performance comparisons between methods.",
-    image: "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=800&h=600&q=80",
-    screenshots: [
-      "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=800&h=600&q=80",
-      "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=800&h=600&q=80",
-    ],
-    tags: ["Python", "Jupyter", "NumPy", "SciPy", "Mathematics"],
-    github: "https://github.com/mariosianturi19/Implementasi-Interpolasi",
-    category: "Algorithm",
-    year: "2023",
-    highlights: [
-      "Lagrange interpolation implementation",
-      "Newton's Divided Difference method",
-      "Linear and Cubic Spline methods",
-      "Side-by-side method comparison",
-      "Matplotlib visualizations",
-    ],
+    caseStudy: {
+      challenge:
+        "Field users needed a quick way to identify provider branding from outlet signage while working with inconsistent lighting, framing, and image quality. A color-only decision also had to remain explainable instead of returning an opaque label.",
+      role: "Front-End Developer Intern; later modernization owner",
+      contributions: [
+        "Built camera capture and image-upload flows with client-side processing and no image transmission.",
+        "Implemented recognition profiles for Telkomsel, by.U, IM3, Tri, XL, AXIS, and Smartfren.",
+        "Added exposure, contrast, sharpness, and saturation checks before classification.",
+        "Presented confidence, dominant clusters, paired-color evidence, and review guidance in a field-operations interface.",
+      ],
+      decisions: [
+        "Used center-weighted color sampling, HSV gates, CIEDE2000 distance, and primary/accent pairing to reduce simple dominant-color false matches.",
+        "Added evidence and confidence safeguards instead of claiming a formal machine-learning accuracy percentage.",
+        "Modernized the approved internship implementation with Next.js and TypeScript and added automated desktop and mobile coverage.",
+      ],
+      outcome:
+        "Produced an explainable browser-based workflow for outlet sampling across seven Indonesian provider brands, with results that expose the evidence behind each classification.",
+      status: "Original internship project was approved; later modernized locally and not publicly deployed.",
+    },
   },
 ]

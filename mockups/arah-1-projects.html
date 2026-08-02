@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arah 1 — Projects: Editorial List + Floating Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0F;
+    --ink: #EDEDF2;
+    --muted: #8B8B99;
+    --accent: #D4FF4F;
+    --line: rgba(237,237,242,.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: 'Inter Tight', sans-serif;
+    overflow-x: hidden; cursor: none;
+  }
+  a, li, button { cursor: none; }
+
+  .cursor {
+    position: fixed; z-index: 999; pointer-events: none;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent); mix-blend-mode: difference;
+    transform: translate(-50%,-50%);
+    transition: width .25s, height .25s;
+  }
+  .cursor.grow { width: 48px; height: 48px; }
+
+  .section { padding: 120px 5vw 100px; max-width: 1360px; margin: 0 auto; }
+
+  /* ── Header ── */
+  .head { display: flex; align-items: flex-end; justify-content: space-between; gap: 30px; flex-wrap: wrap; margin-bottom: 34px; }
+  h2 {
+    font-family: 'Syne', sans-serif; font-weight: 800; text-transform: uppercase;
+    font-size: clamp(2.4rem, 6vw, 4.6rem); letter-spacing: -.03em; line-height: 1;
+  }
+  h2 sup {
+    font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 400;
+    color: var(--accent); letter-spacing: .1em; margin-left: 10px;
+  }
+  .head p { max-width: 380px; color: var(--muted); font-size: 15px; line-height: 1.7; font-weight: 300; }
+
+  /* ── Filter ── */
+  .filters { display: flex; gap: 28px; margin-bottom: 10px; font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .15em; text-transform: uppercase; }
+  .filters button {
+    background: none; border: none; color: var(--muted);
+    font: inherit; letter-spacing: inherit; text-transform: inherit;
+    padding: 6px 0; position: relative; transition: color .3s;
+  }
+  .filters button::after {
+    content: ''; position: absolute; left: 0; bottom: 0; height: 1px; width: 100%;
+    background: var(--accent); transform: scaleX(0); transform-origin: left;
+    transition: transform .35s cubic-bezier(.16,1,.3,1);
+  }
+  .filters button:hover { color: var(--ink); }
+  .filters button.active { color: var(--accent); }
+  .filters button.active::after { transform: scaleX(1); }
+
+  /* ── Case study rows ── */
+  .rows { border-top: 1px solid var(--line); }
+  .row {
+    position: relative;
+    display: grid; grid-template-columns: 70px 1fr auto auto 40px; align-items: center; gap: 26px;
+    padding: 34px 10px;
+    border-bottom: 1px solid var(--line);
+    transition: padding .35s cubic-bezier(.16,1,.3,1);
+  }
+  .row:hover { padding-left: 26px; }
+  .row .idx {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--muted);
+    transition: color .3s;
+  }
+  .row:hover .idx { color: var(--accent); }
+  .row .title {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: clamp(1.4rem, 3.4vw, 2.4rem); letter-spacing: -.02em; text-transform: uppercase;
+    transition: color .3s;
+  }
+  .row:hover .title { color: var(--accent); }
+  .row .cat, .row .year {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+    white-space: nowrap;
+  }
+  .row .arrow {
+    width: 34px; height: 34px; border: 1px solid var(--line); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: var(--muted);
+    transition: background .3s, color .3s, border-color .3s, transform .35s cubic-bezier(.16,1,.3,1);
+  }
+  .row:hover .arrow {
+    background: var(--accent); color: #0A0A0F; border-color: var(--accent);
+    transform: rotate(45deg);
+  }
+
+  /* ── Floating preview image (follows cursor) ── */
+  .preview {
+    position: fixed; z-index: 100; pointer-events: none;
+    width: min(360px, 34vw); aspect-ratio: 16/10;
+    border-radius: 12px; overflow: hidden;
+    opacity: 0; transform: translate(-50%,-50%) scale(.85) rotate(-2deg);
+    transition: opacity .3s, transform .45s cubic-bezier(.16,1,.3,1);
+  }
+  .preview.on { opacity: 1; transform: translate(-50%,-50%) scale(1) rotate(0deg); }
+  .preview .ph {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .2em;
+    color: rgba(237,237,242,.85); text-transform: uppercase;
+  }
+  .preview img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .25s; }
+  .preview img.on { opacity: 1; }
+
+  /* ── More projects grid ── */
+  .sub {
+    margin: 90px 0 30px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
+  }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .card {
+    position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    transition: border-color .3s;
+  }
+  .card:hover { border-color: rgba(212,255,79,.35); }
+  .card .img {
+    aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .2em;
+    color: rgba(237,237,242,.6); text-transform: uppercase;
+    filter: grayscale(1); transition: filter .5s, transform .6s cubic-bezier(.16,1,.3,1);
+  }
+  .card:hover .img { filter: grayscale(0); transform: scale(1.04); }
+  .card .meta { display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; }
+  .card .meta .t { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px; text-transform: uppercase; letter-spacing: -.01em; }
+  .card .meta .y { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); }
+
+  @media (max-width: 860px) {
+    body { cursor: auto; }
+    a, li, button { cursor: pointer; }
+    .cursor, .preview { display: none; }
+    .row { grid-template-columns: 40px 1fr 34px; }
+    .row .cat, .row .year { display: none; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+
+  <div class="preview" id="preview"><div class="ph" id="previewPh"></div><img id="previewImg" alt=""></div>
+
+  <section class="section">
+    <div class="head">
+      <h2>Selected Work<sup>(05)</sup></h2>
+      <p>Five source-backed case studies — the challenge, my role, engineering decisions, and outcome. Open one to inspect it fully.</p>
+    </div>
+
+    <div class="filters">
+      <button class="active">All</button>
+      <button>Web</button>
+      <button>Mobile</button>
+      <button>Algorithm</button>
+    </div>
+
+    <div class="rows" id="rows">
+      <div class="row" data-img="" data-c="#1b2a4a">
+        <span class="idx">01</span>
+        <span class="title">Emergency Reporting App</span>
+        <span class="cat">Web</span>
+        <span class="year">2025</span>
+        <span class="arrow">↗</span>
+      </div>
+      <div class="row" data-img="" data-c="#3a1f3d">
+        <span class="idx">02</span>
+        <span class="title">Premier League Stats</span>
+        <span class="cat">Web</span>
+        <span class="year">2024</span>
+        <span class="arrow">↗</span>
+      </div>
+      <div class="row" data-img="" data-c="#14362b">
+        <span class="idx">03</span>
+        <span class="title">Telkomsel Outlet Recognition</span>
+        <span class="cat">Mobile</span>
+        <span class="year">2024</span>
+        <span class="arrow">↗</span>
+      </div>
+      <div class="row" data-img="" data-c="#40260f">
+        <span class="idx">04</span>
+        <span class="title">Hermes Internal Ops</span>
+        <span class="cat">Web</span>
+        <span class="year">2024</span>
+        <span class="arrow">↗</span>
+      </div>
+      <div class="row" data-img="" data-c="#0f3040">
+        <span class="idx">05</span>
+        <span class="title">Auto Credit Simulation</span>
+        <span class="cat">Algorithm</span>
+        <span class="year">2023</span>
+        <span class="arrow">↗</span>
+      </div>
+    </div>
+
+    <p class="sub">Additional work — 08 more</p>
+    <div class="grid">
+      <div class="card">
+        <div class="img" style="background:#1b2a4a">E-Commerce UI</div>
+        <div class="meta"><span class="t">Storefront Redesign</span><span class="y">2024 · WEB</span></div>
+      </div>
+      <div class="card">
+        <div class="img" style="background:#14362b">Kotlin App</div>
+        <div class="meta"><span class="t">Campus Event App</span><span class="y">2023 · MOBILE</span></div>
+      </div>
+      <div class="card">
+        <div class="img" style="background:#3a1f3d">Dashboard</div>
+        <div class="meta"><span class="t">Analytics Dashboard</span><span class="y">2023 · WEB</span></div>
+      </div>
+      <div class="card">
+        <div class="img" style="background:#40260f">CLI Tool</div>
+        <div class="meta"><span class="t">Data Parser Utility</span><span class="y">2023 · ALGORITHM</span></div>
+      </div>
+    </div>
+  </section>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  let cx = -100, cy = -100, tx = cx, ty = cy;
+  addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
+
+  // Floating preview follows cursor with lag
+  const preview = document.getElementById('preview');
+  const previewPh = document.getElementById('previewPh');
+  const previewImg = document.getElementById('previewImg');
+  let px = -100, py = -100;
+
+  (function loop() {
+    cx += (tx - cx) * .2;  cy += (ty - cy) * .2;
+    px += (tx - px) * .12; py += (ty - py) * .12;
+    cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px';
+    preview.style.left = px + 'px'; preview.style.top = py + 'px';
+    requestAnimationFrame(loop);
+  })();
+
+  document.querySelectorAll('.row, .card, .filters button').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+  });
+
+  document.querySelectorAll('.row').forEach(row => {
+    row.addEventListener('mouseenter', () => {
+      const title = row.querySelector('.title').textContent;
+      const real = row.dataset.img;
+      previewPh.textContent = title;
+      preview.style.background = row.dataset.c;
+      if (real) { previewImg.src = real; previewImg.classList.add('on'); }
+      preview.classList.add('on');
+    });
+    row.addEventListener('mouseleave', () => {
+      preview.classList.remove('on');
+      previewImg.classList.remove('on');
+    });
+  });
+
+  // Filter buttons (visual only in mockup)
+  document.querySelectorAll('.filters button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelector('.filters .active').classList.remove('active');
+      btn.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

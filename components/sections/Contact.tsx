@@ -6,53 +6,116 @@ import { motion } from "framer-motion"
 import emailjs from "@emailjs/browser"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
-import { Mail, Phone, MapPin, Linkedin, Github, Send, Loader2, Sparkles, MessageSquare } from "lucide-react"
-// Menggunakan Toast hook yang sudah ada di repo Anda untuk UX yang lebih premium
-import { useToast } from "@/hooks/use-toast" 
+import Magnetic from "@/components/Magnetic"
+import { Mail, Phone, MapPin, Linkedin, Github, Send, Loader2, ArrowUpRight } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
+
+type ContactFormData = {
+  user_name: string
+  user_email: string
+  subject: string
+  message: string
+}
+
+type ContactField = keyof ContactFormData
+type ContactErrors = Partial<Record<ContactField, string>>
+type FormStatus = {
+  type: "idle" | "submitting" | "success" | "error"
+  message: string
+}
+
+const initialFormData: ContactFormData = {
+  user_name: "",
+  user_email: "",
+  subject: "",
+  message: "",
+}
+
+const fieldOrder: ContactField[] = ["user_name", "user_email", "subject", "message"]
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+
+const EASE = [0.16, 1, 0.3, 1] as const
 
 export default function Contact() {
   const { toast } = useToast()
   const form = useRef<HTMLFormElement>(null)
-  
-  const [formData, setFormData] = useState({
-    user_name: "",
-    user_email: "",
-    subject: "",
-    message: "",
-  })
-  const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const fieldRefs = useRef<Partial<Record<ContactField, HTMLInputElement | HTMLTextAreaElement | null>>>({})
 
-  // Initialize EmailJS
+  const [formData, setFormData] = useState<ContactFormData>(initialFormData)
+  const [errors, setErrors] = useState<ContactErrors>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [formStatus, setFormStatus] = useState<FormStatus>({ type: "idle", message: "" })
+
   const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
   const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
   const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
 
+  const validateField = (name: ContactField, value: string) => {
+    const trimmedValue = value.trim()
+
+    if (name === "user_name") {
+      if (trimmedValue.length < 2) return "Name must be at least 2 characters."
+      if (trimmedValue.length > 80) return "Name must be 80 characters or fewer."
+    }
+
+    if (name === "user_email") {
+      if (!emailPattern.test(trimmedValue)) {
+        return "Please enter a valid email address."
+      }
+    }
+
+    if (name === "subject") {
+      if (trimmedValue.length < 5) return "Subject must be at least 5 characters."
+      if (trimmedValue.length > 120) return "Subject must be 120 characters or fewer."
+    }
+
+    if (name === "message") {
+      if (trimmedValue.length < 10) return "Message must be at least 10 characters."
+      if (trimmedValue.length > 2000) return "Message must be 2,000 characters or fewer."
+    }
+
+    return ""
+  }
+
   const validateForm = () => {
-    const newErrors: { [key: string]: string } = {}
-    if (!formData.user_name || formData.user_name.trim().length < 2) {
-      newErrors.user_name = "Name must be at least 2 characters."
-    }
-    if (!formData.user_email || !/\S+@\S+\.\S+/.test(formData.user_email)) {
-      newErrors.user_email = "Please enter a valid email address."
-    }
-    if (!formData.subject || formData.subject.trim().length < 5) {
-      newErrors.subject = "Subject must be at least 5 characters."
-    }
-    if (!formData.message || formData.message.trim().length < 10) {
-      newErrors.message = "Message must be at least 10 characters."
-    }
+    const newErrors = fieldOrder.reduce<ContactErrors>((result, field) => {
+      const error = validateField(field, formData[field])
+      if (error) result[field] = error
+      return result
+    }, {})
+
     setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+
+    const firstInvalidField = fieldOrder.find((field) => newErrors[field])
+    if (firstInvalidField) {
+      setFormStatus({
+        type: "error",
+        message: "Please review the highlighted fields before sending your message.",
+      })
+      requestAnimationFrame(() => fieldRefs.current[firstInvalidField]?.focus())
+      return false
+    }
+
+    return true
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
+    const name = e.target.name as ContactField
+    const { value } = e.target
+
     setFormData((prev) => ({ ...prev, [name]: value }))
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }))
+      setErrors((prev) => ({ ...prev, [name]: undefined }))
     }
+    if (formStatus.type !== "idle") {
+      setFormStatus({ type: "idle", message: "" })
+    }
+  }
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const name = e.target.name as ContactField
+    const error = validateField(name, e.target.value)
+    setErrors((prev) => ({ ...prev, [name]: error || undefined }))
   }
 
   const sendEmail = async (e: React.FormEvent) => {
@@ -61,15 +124,18 @@ export default function Contact() {
     if (!validateForm()) return
 
     if (!serviceId || !templateId || !publicKey) {
+      const message = "The contact form is temporarily unavailable. Please use the email link beside it."
+      setFormStatus({ type: "error", message })
       toast({
-        title: "Configuration Error",
-        description: "Email service is not configured properly.",
+        title: "Contact form unavailable",
+        description: message,
         variant: "destructive",
       })
       return
     }
 
     setIsSubmitting(true)
+    setFormStatus({ type: "submitting", message: "Sending your message…" })
 
     try {
       if (!form.current) throw new Error("Form reference not found")
@@ -77,16 +143,23 @@ export default function Contact() {
       await emailjs.sendForm(serviceId, templateId, form.current, publicKey)
 
       toast({
-        title: "Message Sent Successfully! 🎉",
-        description: "Thank you for reaching out. I'll get back to you within 24 hours.",
+        title: "Message sent successfully",
+        description: "Thank you for reaching out. I'll respond as soon as possible.",
       })
 
-      setFormData({ user_name: "", user_email: "", subject: "", message: "" })
+      setFormData(initialFormData)
+      setErrors({})
+      setFormStatus({
+        type: "success",
+        message: "Your message was sent successfully. Thank you for reaching out.",
+      })
     } catch (error) {
       console.error("Failed to send email:", error)
+      const message = "Something went wrong. Please try again or contact me directly via email."
+      setFormStatus({ type: "error", message })
       toast({
         title: "Failed to send message",
-        description: "Something went wrong. Please try again or contact me directly via email.",
+        description: message,
         variant: "destructive",
       })
     } finally {
@@ -94,219 +167,254 @@ export default function Contact() {
     }
   }
 
-  // Framer Motion Variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: "spring", stiffness: 100, damping: 20 },
-    },
-  }
-
-  const contactCards = [
-    { icon: <Mail className="h-6 w-6" />, label: "Email", value: "19mariosianturi@gmail.com", href: "mailto:19mariosianturi@gmail.com", color: "text-blue-500", bg: "bg-blue-500/10" },
-    { icon: <Phone className="h-6 w-6" />, label: "WhatsApp", value: "+62 877 1655 4446", href: "https://wa.me/6287716554446", color: "text-green-500", bg: "bg-green-500/10" },
-    { icon: <MapPin className="h-6 w-6" />, label: "Location", value: "Semarang, Indonesia", href: null, color: "text-rose-500", bg: "bg-rose-500/10" },
+  const contactRows = [
+    { icon: <Mail className="h-4 w-4" />, label: "Email", value: "19mariosianturi@gmail.com", href: "mailto:19mariosianturi@gmail.com" },
+    { icon: <Phone className="h-4 w-4" />, label: "WhatsApp", value: "+62 877 1655 4446", href: "https://wa.me/6287716554446" },
+    { icon: <MapPin className="h-4 w-4" />, label: "Location", value: "Jakarta, Indonesia", href: null },
   ]
 
   const socialLinks = [
-    { icon: <Linkedin className="h-5 w-5" />, href: "https://www.linkedin.com/in/togar-anthony-mario-sianturi/", label: "LinkedIn" },
-    { icon: <Github className="h-5 w-5" />, href: "https://github.com/mariosianturi19", label: "GitHub" },
+    { icon: <Linkedin className="h-4 w-4" />, href: "https://www.linkedin.com/in/togar-anthony-mario-sianturi/", label: "LinkedIn" },
+    { icon: <Github className="h-4 w-4" />, href: "https://github.com/mariosianturi19", label: "GitHub" },
   ]
 
-  return (
-    <section id="contact" className="py-24 md:py-32 bg-background relative overflow-hidden">
-      
-      {/* Premium Background Glow */}
-      <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] pointer-events-none -translate-y-1/2" />
-      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[150px] pointer-events-none" />
+  const fieldClass = (hasError: boolean) =>
+    `h-auto rounded-none border-0 border-b bg-transparent px-0 py-3 text-base focus-visible:border-primary ${hasError ? "border-destructive" : "border-border/25"}`
 
-      <div className="container mx-auto px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 relative z-10">
-        
-        {/* Header */}
-        <motion.div 
-          initial="hidden"
-          whileInView="visible"
+  return (
+    <section id="contact" className="relative bg-background py-28 md:py-36">
+      <div className="container-custom relative z-10">
+        {/* ── Header ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          variants={containerVariants}
-          className="text-center mb-16 md:mb-24"
+          transition={{ duration: 0.7, ease: EASE }}
+          className="mb-16 md:mb-24"
         >
-          <motion.div variants={itemVariants} className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border/50 bg-background/50 backdrop-blur-md text-sm font-medium mb-6 shadow-sm">
-            <MessageSquare className="h-4 w-4 text-primary" />
-            <span>Let&apos;s Connect</span>
-          </motion.div>
-          <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 tracking-tight">
-            Get In Touch
-          </motion.h2>
-          <motion.p variants={itemVariants} className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Have a project in mind, looking for a developer, or just want to chat? I&apos;d love to hear from you. Let&apos;s create something amazing together.
-          </motion.p>
+          <p className="section-label mb-5">05 / Let&apos;s Connect</p>
+          <h2 className="font-display text-[11vw] font-extrabold uppercase leading-[0.95] tracking-tight sm:text-[9vw] lg:text-8xl">
+            Get In<br />
+            <span className="text-outline">Touch</span>
+          </h2>
+          <p className="mt-8 max-w-[55ch] text-base font-light leading-8 text-muted-foreground md:text-lg">
+            For developer roles, project collaboration, or questions about my work, send a message or contact me directly.
+          </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 max-w-7xl mx-auto items-start">
-          
-          {/* Left Column: Contact Info Bento */}
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
+        <div className="grid items-start gap-16 lg:grid-cols-12 lg:gap-12">
+          {/* ── Kiri: kontak langsung ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            variants={containerVariants}
-            className="lg:col-span-5 flex flex-col gap-6"
+            transition={{ duration: 0.6, ease: EASE }}
+            className="lg:col-span-5"
           >
-            <div className="grid gap-4">
-              {contactCards.map((item, index) => (
-                <motion.div key={item.label} variants={itemVariants}>
-                  <div className="group relative overflow-hidden rounded-3xl bg-background/50 backdrop-blur-xl border border-border/50 p-6 transition-all duration-500 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1">
-                    {/* Hover Glow Effect */}
-                    <div className={`absolute top-0 right-0 w-32 h-32 ${item.bg} blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                    
-                    <div className="flex items-center gap-5 relative z-10">
-                      <div className={`p-4 rounded-2xl ${item.bg} ${item.color} group-hover:scale-110 transition-transform duration-500`}>
-                        {item.icon}
-                      </div>
-                      <div>
-                        <h4 className="font-medium text-sm text-muted-foreground mb-1">{item.label}</h4>
-                        {item.href ? (
-                          <a href={item.href} target="_blank" rel="noopener noreferrer" className="text-lg font-semibold text-foreground hover:text-primary transition-colors">
-                            {item.value}
-                          </a>
-                        ) : (
-                          <p className="text-lg font-semibold text-foreground">{item.value}</p>
-                        )}
-                      </div>
-                    </div>
+            <h3 className="sr-only">Contact details</h3>
+            <div className="border-t border-border/10">
+              {contactRows.map((item) => (
+                <div key={item.label} className="group flex items-center gap-5 border-b border-border/10 py-6">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border/20 text-muted-foreground transition-colors duration-300 group-hover:border-primary group-hover:text-primary">
+                    {item.icon}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">{item.label}</p>
+                    {item.href ? (
+                      <a
+                        href={item.href}
+                        target={item.href.startsWith("http") ? "_blank" : undefined}
+                        rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                        className="break-words text-base font-medium text-foreground transition-colors hover:text-primary sm:text-lg"
+                      >
+                        {item.value}
+                      </a>
+                    ) : (
+                      <p className="text-base font-medium text-foreground sm:text-lg">{item.value}</p>
+                    )}
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
 
-            <motion.div variants={itemVariants} className="p-8 rounded-3xl bg-primary/5 border border-primary/10 mt-2">
-              <h4 className="font-bold text-lg mb-4 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-primary" />
-                Social Profiles
-              </h4>
-              <div className="flex gap-4">
+            <div className="mt-10">
+              <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Social profiles</p>
+              <div className="flex gap-3">
                 {socialLinks.map((social) => (
-                  <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" className="p-4 rounded-2xl bg-background border border-border/50 text-foreground hover:text-primary hover:border-primary/30 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Open ${social.label} profile in a new tab`}
+                    className="group flex h-12 w-12 items-center justify-center rounded-full border border-border/20 text-muted-foreground transition-all duration-300 hover:border-primary hover:text-primary"
+                  >
                     {social.icon}
                   </a>
                 ))}
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Column: Glassmorphism Form */}
-          <motion.div 
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
-            className="lg:col-span-7"
-          >
-            <div className="relative rounded-[2.5rem] bg-card/30 backdrop-blur-2xl border border-border/50 shadow-2xl overflow-hidden">
-              {/* Form Inner Glow */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-primary/10 blur-[80px] pointer-events-none" />
-              
-              <div className="p-8 md:p-10 relative z-10">
-                <h3 className="text-2xl font-bold mb-8 flex items-center gap-3">
-                  Send me a message
-                  <div className="h-1 flex-1 bg-gradient-to-r from-primary/50 to-transparent rounded-full opacity-50" />
-                </h3>
-
-                <form ref={form} onSubmit={sendEmail} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label htmlFor="user_name" className="text-sm font-semibold text-foreground/80 ml-1">Full Name</label>
-                      <Input
-                        id="user_name"
-                        name="user_name"
-                        value={formData.user_name}
-                        onChange={handleChange}
-                        placeholder="John Doe"
-                        className={`h-12 bg-background/50 border-border/50 focus-visible:ring-primary/30 rounded-xl transition-all ${errors.user_name ? 'border-destructive focus-visible:ring-destructive/30' : ''}`}
-                        disabled={isSubmitting}
-                      />
-                      {errors.user_name && <p className="text-xs text-destructive ml-1">{errors.user_name}</p>}
-                    </div>
-
-                    <div className="space-y-2">
-                      <label htmlFor="user_email" className="text-sm font-semibold text-foreground/80 ml-1">Email Address</label>
-                      <Input
-                        id="user_email"
-                        name="user_email"
-                        type="email"
-                        value={formData.user_email}
-                        onChange={handleChange}
-                        placeholder="john@example.com"
-                        className={`h-12 bg-background/50 border-border/50 focus-visible:ring-primary/30 rounded-xl transition-all ${errors.user_email ? 'border-destructive focus-visible:ring-destructive/30' : ''}`}
-                        disabled={isSubmitting}
-                      />
-                      {errors.user_email && <p className="text-xs text-destructive ml-1">{errors.user_email}</p>}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label htmlFor="subject" className="text-sm font-semibold text-foreground/80 ml-1">Subject</label>
-                    <Input
-                      id="subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      placeholder="Project Inquiry"
-                      className={`h-12 bg-background/50 border-border/50 focus-visible:ring-primary/30 rounded-xl transition-all ${errors.subject ? 'border-destructive focus-visible:ring-destructive/30' : ''}`}
-                      disabled={isSubmitting}
-                    />
-                    {errors.subject && <p className="text-xs text-destructive ml-1">{errors.subject}</p>}
-                  </div>
-
-                  <div className="space-y-2">
-                    <label htmlFor="message" className="text-sm font-semibold text-foreground/80 ml-1">Your Message</label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      placeholder="Tell me about your project, ideas, or just say hello..."
-                      className={`min-h-[150px] resize-none bg-background/50 border-border/50 focus-visible:ring-primary/30 rounded-xl p-4 transition-all ${errors.message ? 'border-destructive focus-visible:ring-destructive/30' : ''}`}
-                      disabled={isSubmitting}
-                    />
-                    {errors.message && <p className="text-xs text-destructive ml-1">{errors.message}</p>}
-                  </div>
-
-                  <Button 
-                    type="submit" 
-                    disabled={isSubmitting} 
-                    className="w-full h-14 text-base font-semibold rounded-xl bg-foreground text-background hover:bg-primary hover:text-primary-foreground transition-all duration-300 shadow-lg hover:shadow-primary/25 group overflow-hidden relative"
-                  >
-                    {/* Animated shine effect on button */}
-                    <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite]" />
-                    
-                    {isSubmitting ? (
-                      <span className="flex items-center gap-2">
-                        <Loader2 className="h-5 w-5 animate-spin" />
-                        Sending...
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-2 relative z-10">
-                        Send Message
-                        <Send className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-                      </span>
-                    )}
-                  </Button>
-                </form>
+                <a
+                  href="mailto:19mariosianturi@gmail.com"
+                  className="group ml-2 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-primary"
+                >
+                  19mariosianturi@gmail.com
+                  <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
               </div>
             </div>
           </motion.div>
-          
+
+          {/* ── Kanan: form underline ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}
+            className="lg:col-span-7"
+          >
+            <div className="mb-8 flex items-baseline justify-between">
+              <h3 id="contact-form-title" className="font-display text-2xl font-extrabold uppercase tracking-tight">
+                Send a message
+              </h3>
+              <p id="contact-required-note" className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                All fields required
+              </p>
+            </div>
+
+            <form
+              ref={form}
+              onSubmit={sendEmail}
+              noValidate
+              aria-labelledby="contact-form-title"
+              aria-describedby="contact-required-note contact-form-status"
+              className="space-y-8"
+            >
+              <div className="grid gap-8 md:grid-cols-2">
+                <div className="space-y-2">
+                  <label htmlFor="user_name" className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">01 — Full Name</label>
+                  <Input
+                    ref={(node) => { fieldRefs.current.user_name = node }}
+                    id="user_name"
+                    name="user_name"
+                    type="text"
+                    value={formData.user_name}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder="John Doe"
+                    autoComplete="name"
+                    minLength={2}
+                    maxLength={80}
+                    required
+                    aria-invalid={Boolean(errors.user_name)}
+                    aria-describedby={errors.user_name ? "user_name-error" : undefined}
+                    className={fieldClass(Boolean(errors.user_name))}
+                    disabled={isSubmitting}
+                  />
+                  {errors.user_name && <p id="user_name-error" className="text-xs text-destructive">{errors.user_name}</p>}
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="user_email" className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">02 — Email Address</label>
+                  <Input
+                    ref={(node) => { fieldRefs.current.user_email = node }}
+                    id="user_email"
+                    name="user_email"
+                    type="email"
+                    value={formData.user_email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder="john@example.com"
+                    autoComplete="email"
+                    maxLength={254}
+                    required
+                    aria-invalid={Boolean(errors.user_email)}
+                    aria-describedby={errors.user_email ? "user_email-error" : undefined}
+                    className={fieldClass(Boolean(errors.user_email))}
+                    disabled={isSubmitting}
+                  />
+                  {errors.user_email && <p id="user_email-error" className="text-xs text-destructive">{errors.user_email}</p>}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="subject" className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">03 — Subject</label>
+                <Input
+                  ref={(node) => { fieldRefs.current.subject = node }}
+                  id="subject"
+                  name="subject"
+                  type="text"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Project Inquiry"
+                  minLength={5}
+                  maxLength={120}
+                  required
+                  aria-invalid={Boolean(errors.subject)}
+                  aria-describedby={errors.subject ? "subject-error" : undefined}
+                  className={fieldClass(Boolean(errors.subject))}
+                  disabled={isSubmitting}
+                />
+                {errors.subject && <p id="subject-error" className="text-xs text-destructive">{errors.subject}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="message" className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">04 — Your Message</label>
+                <Textarea
+                  ref={(node) => { fieldRefs.current.message = node }}
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Tell me about your project, ideas, or just say hello..."
+                  minLength={10}
+                  maxLength={2000}
+                  required
+                  aria-invalid={Boolean(errors.message)}
+                  aria-describedby={errors.message ? "message-error" : undefined}
+                  className={`min-h-[140px] resize-none ${fieldClass(Boolean(errors.message))}`}
+                  disabled={isSubmitting}
+                />
+                {errors.message && <p id="message-error" className="text-xs text-destructive">{errors.message}</p>}
+              </div>
+
+              <p
+                id="contact-form-status"
+                role={formStatus.type === "error" ? "alert" : "status"}
+                aria-live={formStatus.type === "error" ? "assertive" : "polite"}
+                className={`min-h-5 font-mono text-xs tracking-[0.05em] ${
+                  formStatus.type === "error"
+                    ? "text-destructive"
+                    : formStatus.type === "success"
+                      ? "text-primary"
+                      : "text-muted-foreground"
+                }`}
+              >
+                {formStatus.message}
+              </p>
+
+              <Magnetic strength={0.15}>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  aria-describedby="contact-form-status"
+                  className="group flex h-14 w-full items-center justify-center gap-3 rounded-full bg-primary text-base font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_40px_-8px_hsl(var(--primary)/0.45)] disabled:pointer-events-none disabled:opacity-50 sm:w-auto sm:px-14"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Send Message
+                      <Send className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </>
+                  )}
+                </button>
+              </Magnetic>
+            </form>
+          </motion.div>
         </div>
       </div>
     </section>

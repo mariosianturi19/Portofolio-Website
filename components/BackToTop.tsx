@@ -17,7 +17,7 @@ export default function BackToTop() {
       }
     }
 
-    window.addEventListener("scroll", toggleVisibility)
+    window.addEventListener("scroll", toggleVisibility, { passive: true })
     return () => window.removeEventListener("scroll", toggleVisibility)
   }, [])
 
@@ -35,13 +35,14 @@ export default function BackToTop() {
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.5 }}
-          transition={{ duration: 0.2 }}
-          className="fixed bottom-8 right-8 z-40"
+          transition={{ type: "spring", stiffness: 260, damping: 20 }}
+          className="back-to-top fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 hidden sm:block sm:bottom-8 sm:right-8"
         >
           <Button
             onClick={scrollToTop}
             size="icon"
-            className="h-12 w-12 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+            variant="outline"
+            className="h-11 w-11 bg-background/80 backdrop-blur-md sm:h-12 sm:w-12"
             aria-label="Back to top"
           >
             <ArrowUp className="h-5 w-5" />

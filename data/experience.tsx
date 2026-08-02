@@ -1,4 +1,4 @@
-// file: data/experience.tsx
+﻿// file: data/experience.tsx
 
 import { Smartphone, Code, Globe, BrainCircuit, Database } from "lucide-react"
 import React from "react"
@@ -11,6 +11,7 @@ export interface TimelineItem {
     period: string
     type: string
     description: string
+    achievements?: string[]
     skills: string[]
     category?: string
     isBangkit?: boolean
@@ -32,8 +33,14 @@ export const experiencesData: TimelineItem[] = [
         location: "Jakarta, Indonesia",
         period: "Jan 2025 - Feb 2025",
         type: "Internship",
-        description: "Developed responsive dashboard using Next.js, TypeScript, and modern CSS frameworks.",
-        skills: ["Next.js", "TypeScript", "CSS", "JavaScript"],
+        description: "Developed Hermes, a responsive internal operations interface for company, employee, correspondence, and employment-contract workflows using Next.js and TypeScript.",
+        achievements: [
+            "Built dashboard summaries and reusable table, form, navigation, search, pagination, and status patterns.",
+            "Implemented CRUD interfaces for companies, employees, and PKS, PKWT, and PKWTT contract records.",
+            "Handled contract-specific fields, dates, statuses, record details, and user feedback across desktop and mobile layouts.",
+            "Later preserved the retired frontend with response-compatible local data and localStorage, without legacy API requests.",
+        ],
+        skills: ["Next.js", "TypeScript", "React", "CRUD Workflows", "Responsive Design"],
     },
     {
         id: 2,
@@ -42,8 +49,14 @@ export const experiencesData: TimelineItem[] = [
         location: "Jakarta, Indonesia",
         period: "Jul 2024 - Aug 2024",
         type: "Internship",
-        description: "Contributed to web development projects using modern frameworks and best practices.",
-        skills: ["React", "JavaScript", "CSS", "HTML"],
+        description: "Developed a browser-based Outlet Recognition application for field sampling and outlet analysis using camera or image input and explainable color-signature evidence.",
+        achievements: [
+            "Built camera capture, image upload, and on-device Canvas processing without transmitting the source image.",
+            "Implemented provider profiles for Telkomsel, by.U, IM3, Tri, XL, AXIS, and Smartfren.",
+            "Added image-quality checks, dominant-color analysis, paired-color evidence, confidence safeguards, and review guidance.",
+            "Later modernized the approved internship implementation with Next.js and TypeScript and added automated desktop and mobile tests.",
+        ],
+        skills: ["Next.js", "TypeScript", "Canvas API", "Image Processing", "Testing"],
     },
     {
         id: 3,
@@ -74,9 +87,9 @@ export const educationData: TimelineItem[] = [
         title: "Computer Engineering",
         company: "Diponegoro University",
         location: "Semarang, Indonesia",
-        period: "2022 - Present",
-        type: "Bachelor's Degree",
-        description: "Focusing on software development, algorithms, and computer systems.",
+        period: "2022 - 2026",
+        type: "Bachelor's Degree · Completed",
+        description: "Completed all Computer Engineering academic requirements and currently awaiting the graduation ceremony, with a focus on software development, algorithms, and computer systems.",
         skills: ["Software Engineering", "Data Structures", "Algorithms"],
     },
     {
