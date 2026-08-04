@@ -22,6 +22,7 @@ export interface Project {
   tags: string[]
   github: string
   liveUrl?: string           // Link demo/live jika ada
+  liveLabel?: string         // Label CTA untuk link live jika perlu dibedakan
   category: "Mobile" | "Web" | "Algorithm"
   featured?: boolean
   isCapstone?: boolean
@@ -75,6 +76,7 @@ export const projectsData: Project[] = [
     tags: ["Next.js", "TypeScript", "React", "Zod", "REST API"],
     github: "https://github.com/mariosianturi19/SIGAP-UNDIP",
     liveUrl: "https://sigap.undip.ac.id/",
+    liveLabel: "Visit Live Project",
     category: "Web",
     featured: true,
     year: "2024",
@@ -162,6 +164,8 @@ export const projectsData: Project[] = [
     ],
     tags: ["Next.js", "TypeScript", "Prisma", "MySQL", "PWA"],
     github: "https://github.com/mariosianturi19/Gaspol",
+    liveUrl: "https://www.gaspol.web.id/",
+    liveLabel: "Visit Live Project",
     category: "Web",
     featured: true,
     year: "2025",
@@ -189,7 +193,7 @@ export const projectsData: Project[] = [
       ],
       outcome:
         "Delivered an end-to-end workflow from secure login and financing calculation through saved simulation history and status review.",
-      status: "Full-stack local implementation; no public production deployment is claimed.",
+      status: "Live public project; full-stack implementation.",
     },
   },
   {

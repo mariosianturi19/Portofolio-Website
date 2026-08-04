@@ -733,7 +733,7 @@ function ProjectModal({
                         rel="noopener noreferrer"
                         className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full border border-border/25 text-sm transition-all duration-300 hover:border-primary hover:text-primary"
                       >
-                        Live Demo
+                        {project.liveLabel ?? "Live Demo"}
                         <ArrowUpRight className="h-3.5 w-3.5" />
                       </a>
                     )}
