@@ -74,6 +74,7 @@ export const projectsData: Project[] = [
     ],
     tags: ["Next.js", "TypeScript", "React", "Zod", "REST API"],
     github: "https://github.com/mariosianturi19/SIGAP-UNDIP",
+    liveUrl: "https://sigap.undip.ac.id/",
     category: "Web",
     featured: true,
     year: "2024",
@@ -101,7 +102,7 @@ export const projectsData: Project[] = [
       ],
       outcome:
         "Delivered an end-to-end frontend implementation covering the core student reporting journey and the volunteer and administrator response workflows.",
-      status: "Source-backed frontend implementation; production deployment is not claimed.",
+      status: "Live official UNDIP project; frontend contribution.",
     },
   },
   {
