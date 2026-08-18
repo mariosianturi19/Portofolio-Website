@@ -5,14 +5,14 @@ import { Download, Github, MoveRight } from "lucide-react"
 import { useLanguage } from "@/components/LanguageProvider"
 
 const SKILLS = [
-  "JavaScript", "TypeScript", "React.js", "Next.js", "Node.js", "REST APIs",
-  "HTML5", "CSS3", "Tailwind CSS", "PostgreSQL", "Git", "Responsive Design",
+  "JavaScript", "TypeScript", "React.js", "Next.js", "REST APIs", "MySQL",
+  "HTML5", "CSS3", "Tailwind CSS", "Git", "Responsive Design", "PWA",
 ]
 
 const FEATURES = [
   { code: "F-01", title: "Frontend Development", description: "Responsive, accessible interfaces with React, Next.js, and TypeScript." },
-  { code: "F-02", title: "Full-Stack Development", description: "Maintainable application flows, APIs, data handling, and integrations." },
-  { code: "F-03", title: "Project Delivery", description: "Tested project workflows carried from interface decisions into implementation." },
+  { code: "F-02", title: "Full-Stack Web Applications", description: "Application workflows spanning APIs, data handling, authentication, and integrations." },
+  { code: "F-03", title: "Application Engineering", description: "Translate operational requirements into maintainable application flows, validation, and user feedback." },
   { code: "F-04", title: "Industry Experience", description: "Front-End Developer internships at Telkomsel and Klik Digital Sinergi." },
 ]
 
@@ -47,13 +47,13 @@ export default function About() {
 
             <div className="space-y-5 text-base font-light leading-7 text-muted-foreground sm:space-y-6 sm:leading-8 md:text-lg">
               <p>
-                I&apos;m Togar Anthony Mario Sianturi, a <strong className="font-medium text-foreground">Computer Engineering graduate awaiting commencement</strong> and a Frontend / Full-Stack Developer based in Jakarta, Indonesia. I focus on responsive, maintainable web applications built with React, Next.js, TypeScript, and Node.js.
+                I&apos;m Togar Anthony Mario Sianturi, a <strong className="font-medium text-foreground">Computer Engineering graduate awaiting commencement</strong> and a Software Engineer focused on web applications. I build responsive interfaces and full-stack workflows using React, Next.js, TypeScript, REST APIs, and MySQL.
               </p>
               <p>
                 During Front-End Developer internships at <strong className="font-medium text-foreground">Telkomsel</strong> and <strong className="font-medium text-foreground">PT. Klik Digital Sinergi</strong>, I worked on an outlet-recognition application and internal operational interfaces for correspondence, companies, employees, and employment contracts.
               </p>
               <p>
-                My portfolio includes emergency reporting, sports data, internal operations, e-commerce, and automotive credit simulation applications. I enjoy turning real workflows into clear interfaces, reusable components, reliable integrations, and practical user experiences.
+                My portfolio includes role-based campus safety, internal operations, automotive financing, and data-driven web applications. I enjoy turning real workflows into clear interfaces, reliable integrations, and practical user experiences.
               </p>
             </div>
 
@@ -64,7 +64,7 @@ export default function About() {
               <a href="https://github.com/mariosianturi19" target="_blank" rel="noopener noreferrer" className="group inline-flex items-center py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-foreground">
                 <Github className="mr-2 h-4 w-4" />GitHub
               </a>
-              <a href="/Togar-Anthony-Mario-Sianturi-CV.pdf" download className="group inline-flex items-center py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-foreground">
+              <a href="/CV_Togar Anthony Mario Sianturi.pdf" download className="group inline-flex items-center py-2.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground transition-colors hover:text-foreground">
                 <Download className="mr-2 h-4 w-4 transition-transform group-hover:translate-y-0.5" />CV
               </a>
             </div>

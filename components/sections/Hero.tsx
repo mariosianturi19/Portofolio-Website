@@ -7,7 +7,16 @@ import { Button } from "@/components/ui/button"
 import Magnetic from "@/components/Magnetic"
 import { useLanguage } from "@/components/LanguageProvider"
 
-const MARQUEE_ITEMS = ["React", "Next.js", "TypeScript", "Node.js", "PostgreSQL", "Tailwind CSS", "Kotlin", "Firebase"]
+const MARQUEE_ITEMS = [
+  "React",
+  "Next.js",
+  "TypeScript",
+  "REST API",
+  "MySQL",
+  "Tailwind CSS",
+  "PWA",
+  "Git",
+]
 
 export default function Hero() {
   const { t } = useLanguage()
@@ -80,8 +89,8 @@ export default function Hero() {
         >
           {/* Spec sheet — pinjaman arah 2 */}
           <div className="spec-sheet max-w-md lg:w-auto">
-            <div><span className="spec-key">Role</span><span className="spec-value">Frontend / Full-Stack</span></div>
-            <div><span className="spec-key">Stack</span><span className="spec-value">React · Next.js · TS · Node</span></div>
+            <div><span className="spec-key">Role</span><span className="spec-value">Software Engineer</span></div>
+            <div><span className="spec-key">Stack</span><span className="spec-value">React · Next.js · TypeScript · MySQL</span></div>
             <div><span className="spec-key">Base</span><span className="spec-value">Jakarta, ID</span></div>
             <div>
               <span className="spec-key">Status</span>
@@ -105,14 +114,17 @@ export default function Hero() {
                 </a>
               </Button>
             </Magnetic>
-            <a
-              href="/Togar-Anthony-Mario-Sianturi-CV.pdf"
-              download
-              className="group inline-flex min-h-11 items-center justify-center gap-2 border-b border-border/30 py-2.5 font-mono text-xs uppercase tracking-[0.12em] transition-colors hover:border-primary hover:text-primary"
+            <Button
+              size="lg"
+              variant="outline"
+              className="group w-full text-base sm:w-auto"
+              asChild
             >
-              <Download className="h-3.5 w-3.5 transition-transform group-hover:translate-y-0.5" />
-              {t.hero.downloadCV}
-            </a>
+              <a href="/CV_Togar Anthony Mario Sianturi.pdf" download className="flex items-center justify-center">
+                <Download className="mr-2 h-4 w-4 transition-transform group-hover:translate-y-0.5" />
+                {t.hero.downloadCV}
+              </a>
+            </Button>
           </div>
         </motion.div>
 

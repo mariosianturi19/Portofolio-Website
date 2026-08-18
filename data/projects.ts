@@ -39,11 +39,11 @@ export const projectsData: Project[] = [
     description: "Bangkit Capstone 2024 - Smart assistant mobile application for helping people with daily tasks using machine learning and AI technologies.",
     longDescription:
       "Si-Bantu is a Bangkit Academy 2024 Capstone Project — a smart AI-powered assistant mobile app built for Android. The application leverages TensorFlow Lite for on-device machine learning, Firebase for real-time database and authentication, and a custom-trained model to help users manage daily tasks intelligently. Developed as a team project with 6 members spanning Machine Learning, Cloud Computing, and Mobile Development paths.",
-    image: "/projects/sibantu-onboarding-1.png",
+    image: "/projects/sibantu-onboarding-1.webp",
     screenshots: [
-      "/projects/sibantu-onboarding-1.png",
-      "/projects/sibantu-onboarding-2.png",
-      "/projects/sibantu-onboarding-3.png",
+      "/projects/sibantu-onboarding-1.webp",
+      "/projects/sibantu-onboarding-2.webp",
+      "/projects/sibantu-onboarding-3.webp",
     ],
     imageFit: "contain",
     tags: ["Android", "Machine Learning", "TensorFlow", "Kotlin", "Firebase", "AI"],
@@ -67,11 +67,11 @@ export const projectsData: Project[] = [
     description: "Multi-role campus emergency response frontend for students, volunteers, and administrators, with panic reporting, GPS capture, and incident workflows.",
     longDescription:
       "SIGAP UNDIP is a campus emergency response and safety platform designed around the different needs of students, volunteers, and administrators. The frontend brings panic reporting, structured incident reports, location capture, response tracking, and operational dashboards into one responsive web experience.",
-    image: "/SIGAP.png",
+    image: "/SIGAP.webp",
     screenshots: [
-      "/SIGAP.png",
-      "/projects/s1.png",
-      "/projects/s2.png",
+      "/SIGAP.webp",
+      "/projects/s1.webp",
+      "/projects/s2.webp",
     ],
     tags: ["Next.js", "TypeScript", "React", "Zod", "REST API"],
     github: "https://github.com/mariosianturi19/SIGAP-UNDIP",
@@ -113,11 +113,11 @@ export const projectsData: Project[] = [
     description: "Responsive Premier League frontend for standings, fixtures, clubs, squads, and match administration, built around a teammate-provided API.",
     longDescription:
       "Premier League Info System is a responsive sports-data frontend built with React, TypeScript, and Vite. It turns a teammate-provided API into a branded fan and administration experience for league standings, fixtures, club details, squad management, and score updates. The frontend source remains available, while the original external API is no longer online.",
-    image: "/Premiere.png",
+    image: "/Premiere.webp",
     screenshots: [
-      "/Premiere.png",
-      "/projects/p1.png",
-      "/projects/p2.png",
+      "/Premiere.webp",
+      "/projects/p1.webp",
+      "/projects/p2.webp",
     ],
     tags: ["React", "TypeScript", "Vite", "REST API", "PWA"],
     github: "https://github.com/mariosianturi19/premiere-league-app",
@@ -157,10 +157,10 @@ export const projectsData: Project[] = [
     description: "Full-stack automotive credit simulation workflow with financing calculations, budget matching, authentication, and persistent application history.",
     longDescription:
       "GASPOL is a full-stack credit simulation application for automotive sales workflows. It combines customer and vehicle input, configurable interest and insurance rates, installment calculations, budget-based recommendations, document attachments, and a persistent simulation history behind authenticated access.",
-    image: "/Gaspol.png",
+    image: "/Gaspol.webp",
     screenshots: [
-      "/Gaspol.png",
-      "/projects/g1.png",
+      "/Gaspol.webp",
+      "/projects/g1.webp",
     ],
     tags: ["Next.js", "TypeScript", "Prisma", "MySQL", "PWA"],
     github: "https://github.com/mariosianturi19/Gaspol",
@@ -202,11 +202,11 @@ export const projectsData: Project[] = [
     description: "Cutting-edge e-commerce platform for motorcycle enthusiasts. Features intuitive search and exploration of motorcycles with a modern interface.",
     longDescription:
       "MotoMarket is a modern e-commerce platform tailored for motorcycle enthusiasts. Users can browse, search, and compare motorcycles with an intuitive filtering system. The project showcases advanced React patterns, custom hooks for state management, and Vite for blazing-fast development and build times. The UI emphasizes visual product showcase with high-quality imagery and smooth transitions.",
-    image: "/MotoMarket.png",
+    image: "/MotoMarket.webp",
     screenshots: [
-      "/MotoMarket.png",
-      "/projects/k1.png",
-      "/projects/k2.png",
+      "/MotoMarket.webp",
+      "/projects/k1.webp",
+      "/projects/k2.webp",
     ],
     tags: ["Vite", "TypeScript", "React.js", "Responsive Design"],
     github: "https://github.com/mariosianturi19/MotoMarket",
@@ -227,11 +227,11 @@ export const projectsData: Project[] = [
     description: "Esports management dashboard for MPL Indonesia. A PWA for tracking standings, managing team rosters, and monitoring MVP leaderboards.",
     longDescription:
       "MPL ID APP is a Progressive Web Application dashboard for Mobile Legends Professional League Indonesia. The app allows fans and team managers to track real-time standings, browse team rosters, view player statistics, and follow the MVP leaderboard throughout the season. Built with React.js and integrated with a public sports API.",
-    image: "/MPL.png",
+    image: "/MPL.webp",
     screenshots: [
-      "/MPL.png",
-      "/projects/m1.png",
-      "/projects/m2.png",
+      "/MPL.webp",
+      "/projects/m1.webp",
+      "/projects/m2.webp",
     ],
     tags: ["React.js", "API", "PWA", "JavaScript"],
     github: "#",
@@ -252,10 +252,10 @@ export const projectsData: Project[] = [
     description: "Internal web application for PT. Klik Digital Sinergi that centralizes company, employee, correspondence, and employment-contract workflows.",
     longDescription:
       "Hermes is an internal operations web application developed during my Front-End Developer internship at PT. Klik Digital Sinergi. It brings company records, employee data, correspondence, and PKS, PKWT, and PKWTT contract workflows into one responsive interface. The system uses reusable dashboards, searchable tables, status indicators, and structured forms to make administrative information easier to review and maintain.",
-    image: "/projects/klik-dashboard.png",
+    image: "/projects/klik-dashboard.webp",
     screenshots: [
-      "/projects/klik-dashboard.png",
-      "/projects/klik-contracts.png",
+      "/projects/klik-dashboard.webp",
+      "/projects/klik-contracts.webp",
     ],
     tags: ["Next.js", "TypeScript", "React", "Tailwind CSS", "CRUD Workflows"],
     github: "#",
@@ -295,10 +295,10 @@ export const projectsData: Project[] = [
     description: "Browser-based field tool that identifies seven Indonesian provider brands from outlet signage using explainable color-signature evidence.",
     longDescription:
       "Telkomsel Outlet Recognition is a web application developed to support outlet data sampling and analysis. Field users can capture an outlet sign with the camera or upload an existing image, then review an on-device classification supported by image-quality checks, dominant color clusters, confidence scoring, and visual evidence. The recognition scope covers Telkomsel, by.U, IM3, Tri, XL, AXIS, and Smartfren.",
-    image: "/projects/outlet-recognition.png",
+    image: "/projects/outlet-recognition.webp",
     screenshots: [
-      "/projects/outlet-recognition.png",
-      "/projects/outlet-scanner.png",
+      "/projects/outlet-recognition.webp",
+      "/projects/outlet-scanner.webp",
     ],
     tags: ["Next.js", "TypeScript", "Computer Vision", "Image Processing", "Canvas API"],
     github: "#",

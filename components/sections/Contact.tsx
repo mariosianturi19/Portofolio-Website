@@ -3,7 +3,6 @@
 import type React from "react"
 import { useState, useRef } from "react"
 import { motion } from "framer-motion"
-import emailjs from "@emailjs/browser"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import Magnetic from "@/components/Magnetic"
@@ -24,6 +23,10 @@ type FormStatus = {
   message: string
 }
 
+type FormspreeErrorResponse = {
+  errors?: Array<{ message?: string }>
+}
+
 const initialFormData: ContactFormData = {
   user_name: "",
   user_email: "",
@@ -38,7 +41,6 @@ const EASE = [0.16, 1, 0.3, 1] as const
 
 export default function Contact() {
   const { toast } = useToast()
-  const form = useRef<HTMLFormElement>(null)
   const fieldRefs = useRef<Partial<Record<ContactField, HTMLInputElement | HTMLTextAreaElement | null>>>({})
 
   const [formData, setFormData] = useState<ContactFormData>(initialFormData)
@@ -46,9 +48,10 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formStatus, setFormStatus] = useState<FormStatus>({ type: "idle", message: "" })
 
-  const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
-  const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
-  const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+  const formspreeFormId = process.env.NEXT_PUBLIC_FORMSPREE_FORM_ID?.trim()
+  const formEndpoint = formspreeFormId && /^[a-zA-Z0-9]+$/.test(formspreeFormId)
+    ? `https://formspree.io/f/${formspreeFormId}`
+    : null
 
   const validateField = (name: ContactField, value: string) => {
     const trimmedValue = value.trim()
@@ -118,12 +121,14 @@ export default function Contact() {
     setErrors((prev) => ({ ...prev, [name]: error || undefined }))
   }
 
-  const sendEmail = async (e: React.FormEvent) => {
+  const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    const formElement = e.currentTarget
 
     if (!validateForm()) return
 
-    if (!serviceId || !templateId || !publicKey) {
+    if (!formEndpoint) {
       const message = "The contact form is temporarily unavailable. Please use the email link beside it."
       setFormStatus({ type: "error", message })
       toast({
@@ -138,9 +143,29 @@ export default function Contact() {
     setFormStatus({ type: "submitting", message: "Sending your message…" })
 
     try {
-      if (!form.current) throw new Error("Form reference not found")
+      const payload = new FormData(formElement)
+      payload.delete("user_name")
+      payload.delete("user_email")
+      payload.set("name", formData.user_name.trim())
+      payload.set("email", formData.user_email.trim())
+      payload.set("subject", formData.subject.trim())
+      payload.set("message", formData.message.trim())
 
-      await emailjs.sendForm(serviceId, templateId, form.current, publicKey)
+      const response = await fetch(formEndpoint, {
+        method: "POST",
+        body: payload,
+        headers: { Accept: "application/json" },
+      })
+
+      if (!response.ok) {
+        const errorBody = (await response.json().catch(() => null)) as FormspreeErrorResponse | null
+        const errorMessage = errorBody?.errors
+          ?.map((error) => error.message)
+          .filter(Boolean)
+          .join(" ")
+
+        throw new Error(errorMessage || `Formspree request failed with status ${response.status}`)
+      }
 
       toast({
         title: "Message sent successfully",
@@ -281,13 +306,21 @@ export default function Contact() {
             </div>
 
             <form
-              ref={form}
               onSubmit={sendEmail}
               noValidate
               aria-labelledby="contact-form-title"
               aria-describedby="contact-required-note contact-form-status"
               className="space-y-8"
             >
+              <input
+                type="text"
+                name="_gotcha"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="hidden"
+              />
+
               <div className="grid gap-8 md:grid-cols-2">
                 <div className="space-y-2">
                   <label htmlFor="user_name" className="font-mono text-[10px] uppercase tracking-[0.15em] text-muted-foreground">01 — Full Name</label>

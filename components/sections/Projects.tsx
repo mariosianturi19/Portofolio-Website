@@ -8,10 +8,11 @@ import {
   X, ChevronLeft, ChevronRight, ArrowUpRight,
   Tag, Layers, CheckCircle2, CircleDot
 } from "lucide-react"
+import { useLenis } from "lenis/react"
 import { useLanguage } from "@/components/LanguageProvider"
 import { projectsData, Category, Project } from "@/data/projects"
 
-const caseStudyPriority = [2, 12, 9, 4, 3]
+const caseStudyPriority = [4, 2, 12, 9, 3]
 const portfolioProjects = projectsData
   .filter((project) => project.featured && !project.image.startsWith("http"))
   .sort((a, b) => {
@@ -30,6 +31,7 @@ const EASE = [0.16, 1, 0.3, 1] as const
 // ─────────────────────────────────────────────────────────────────────────────
 export default function Projects() {
   const { t } = useLanguage()
+  const lenis = useLenis()
   const [filter, setFilter]               = useState<Category>("All")
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [hoveredProject, setHoveredProject]   = useState<Project | null>(null)
@@ -90,20 +92,30 @@ export default function Projects() {
       .map((category) => ({ id: category, label: categoryLabels[category] })),
   ]
 
-  // Body scroll lock saat modal terbuka
+  // Body scroll lock saat modal terbuka.
+  // Lenis membajak event wheel di window dan menggulirkan halaman secara programatik,
+  // jadi `overflow: hidden` saja tidak cukup — instance-nya harus di-stop juga.
   useEffect(() => {
-    if (selectedProject) {
-      document.body.style.overflow = "hidden"
-      document.body.dataset.projectModalOpen = "true"
-    } else {
-      document.body.style.overflow = ""
-      delete document.body.dataset.projectModalOpen
-    }
+    if (!selectedProject) return
+
+    const { body } = document
+    const previousOverflow = body.style.overflow
+    const previousPaddingRight = body.style.paddingRight
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+
+    lenis?.stop()
+    body.style.overflow = "hidden"
+    // Cegah layout shift saat scrollbar desktop menghilang.
+    if (scrollbarWidth > 0) body.style.paddingRight = `${scrollbarWidth}px`
+    body.dataset.projectModalOpen = "true"
+
     return () => {
-      document.body.style.overflow = ""
-      delete document.body.dataset.projectModalOpen
+      lenis?.start()
+      body.style.overflow = previousOverflow
+      body.style.paddingRight = previousPaddingRight
+      delete body.dataset.projectModalOpen
     }
-  }, [selectedProject])
+  }, [selectedProject, lenis])
 
   const globalIndexOf = (project: Project) => portfolioProjects.findIndex((p) => p.id === project.id)
 
@@ -215,6 +227,24 @@ export default function Projects() {
                 ))}
               </AnimatePresence>
             </motion.div>
+          </div>
+        )}
+
+        {/* ── Empty state saat filter tidak ada hasil ── */}
+        {filteredCaseStudies.length === 0 && filteredSupportingProjects.length === 0 && (
+          <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 text-center">
+            <p className="font-display text-2xl font-extrabold uppercase tracking-tight text-foreground/40 sm:text-3xl">
+              No projects here yet
+            </p>
+            <p className="max-w-sm text-sm font-light leading-relaxed text-muted-foreground">
+              No case studies in this category yet. Try another filter or explore all work.
+            </p>
+            <button
+              onClick={() => setFilter("All")}
+              className="mt-2 inline-flex min-h-11 items-center rounded-full border border-border/25 px-6 py-2.5 font-mono text-xs uppercase tracking-[0.12em] transition-all duration-300 hover:border-primary hover:text-primary"
+            >
+              Show all
+            </button>
           </div>
         )}
       </div>
@@ -455,6 +485,7 @@ function ProjectModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
+            data-lenis-prevent
             className="fixed inset-0 z-[70] bg-background/70 backdrop-blur-sm"
             onClick={onClose}
           />
@@ -467,6 +498,7 @@ function ProjectModal({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
             transition={{ duration: 0.45, ease: EASE }}
+            data-lenis-prevent
             className="fixed inset-0 z-[80] flex min-w-0 flex-col bg-card md:inset-x-0 md:bottom-0 md:top-20 md:rounded-t-2xl md:border-t md:border-border/15"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
@@ -520,7 +552,7 @@ function ProjectModal({
             </div>
 
             {/* ── SCROLLABLE BODY ── */}
-            <div ref={contentRef} className="min-h-0 flex-1 overscroll-contain overflow-y-auto">
+            <div ref={contentRef} data-lenis-prevent className="min-h-0 flex-1 overscroll-contain overflow-y-auto">
               <div className="grid min-w-0 lg:grid-cols-[55%_45%]">
 
                 {/* ── LEFT: gallery ── */}
@@ -612,9 +644,9 @@ function ProjectModal({
                 <div className="flex min-w-0 flex-col p-5 sm:p-8 lg:p-10">
 
                   <div className="mb-7">
-                    <h2 id={`project-title-${project.id}`} className="mb-3 break-words font-display text-2xl font-extrabold uppercase leading-tight tracking-tight md:text-3xl lg:text-4xl">
+                    <h3 id={`project-title-${project.id}`} className="mb-3 break-words font-display text-2xl font-extrabold uppercase leading-tight tracking-tight md:text-3xl lg:text-4xl">
                       {project.title}
-                    </h2>
+                    </h3>
                     <p id={`project-description-${project.id}`} className="text-sm font-light leading-7 text-muted-foreground">
                       {project.longDescription || project.description}
                     </p>

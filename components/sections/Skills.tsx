@@ -4,7 +4,6 @@ import { motion } from "framer-motion"
 import { ArrowUpRight } from "lucide-react"
 import {
   SiFigma,
-  SiFirebase,
   SiFramer,
   SiGit,
   SiJavascript,
@@ -33,7 +32,6 @@ const toolkitLogos = [
   { name: "Framer Motion", icon: SiFramer },
   { name: "JavaScript", icon: SiJavascript },
   { name: "Kotlin", icon: SiKotlin },
-  { name: "Firebase", icon: SiFirebase },
   { name: "Python", icon: SiPython },
   { name: "Figma", icon: SiFigma },
   { name: "Git", icon: SiGit },

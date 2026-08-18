@@ -41,11 +41,28 @@ export default function Navbar() {
     return () => observer.disconnect()
   }, [])
 
-  // Lock scroll saat overlay mobile terbuka
+  // Lock scroll saat overlay mobile terbuka.
+  // Lenis membajak event wheel/touch di window, jadi `overflow: hidden` saja
+  // tidak menghentikannya — instance-nya harus di-stop juga.
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : ""
-    return () => { document.body.style.overflow = "" }
-  }, [isOpen])
+    if (!isOpen) return
+
+    const { body } = document
+    const previousOverflow = body.style.overflow
+    const previousPaddingRight = body.style.paddingRight
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+
+    lenis?.stop()
+    body.style.overflow = "hidden"
+    // Cegah layout shift saat scrollbar menghilang (tablet/desktop kecil).
+    if (scrollbarWidth > 0) body.style.paddingRight = `${scrollbarWidth}px`
+
+    return () => {
+      lenis?.start()
+      body.style.overflow = previousOverflow
+      body.style.paddingRight = previousPaddingRight
+    }
+  }, [isOpen, lenis])
 
   const handleMobileNavigation = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
     event.preventDefault()
@@ -145,6 +162,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
+            data-lenis-prevent
             className="fixed inset-0 z-[70] flex min-h-[100dvh] min-w-0 flex-col overflow-hidden bg-background lg:hidden"
           >
             <div className="container-custom flex min-w-0 items-center justify-between gap-3 py-4 sm:py-5">

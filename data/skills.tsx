@@ -114,7 +114,7 @@ export const skillGroups: SkillGroup[] = [
         name: "Full-Stack Persistence",
         summary:
           "Implement authenticated application flows from domain logic through API routes and relational storage.",
-        tools: ["Prisma", "MySQL", "Next.js API Routes", "JWT"],
+        tools: ["MySQL", "API Routes", "Authentication Flows", "Data Persistence"],
         evidence: [
           {
             project: "GASPOL",
@@ -191,7 +191,6 @@ export const toolkit = [
   "TypeScript",
   "Tailwind CSS",
   "REST API",
-  "Prisma",
   "MySQL",
   "Git & GitHub",
   "Playwright",

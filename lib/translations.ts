@@ -10,9 +10,9 @@
     },
     hero: {
       greeting: "Hi, I'm Mario Sianturi",
-      badge: "Open to Frontend, Full-Stack & IT Developer Roles",
+      badge: "Open to Software Engineer & Full-Stack Developer Roles",
       role: "Frontend & Full-Stack Developer",
-      description: "Computer Engineering graduate awaiting commencement, with Front-End Developer internship experience at Telkomsel and PT. Klik Digital Sinergi. I build responsive, maintainable web applications with React, Next.js, TypeScript, and Node.js.",
+      description: "Computer Engineering graduate awaiting commencement, with Front-End Developer internship experience at Telkomsel and PT. Klik Digital Sinergi. I build responsive, maintainable web applications with React, Next.js, TypeScript, REST APIs, and MySQL.",
       viewProjects: "View Selected Work",
       downloadCV: "Download CV",
       github: "GitHub",

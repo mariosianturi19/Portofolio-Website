@@ -16,8 +16,43 @@ const interTight = Inter_Tight({ subsets: ['latin'], variable: '--font-sans', di
 const syne = Syne({ subsets: ['latin'], weight: ['700', '800'], variable: '--font-display', display: 'swap' });
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], weight: ['400', '700'], variable: '--font-mono', display: 'swap' });
 const siteUrl = 'https://mariosianturi.vercel.app';
-const siteTitle = 'Togar Anthony Mario Sianturi — Frontend & Full-Stack Developer';
-const siteDescription = 'Portfolio of Togar Anthony Mario Sianturi, a Computer Engineering graduate and Frontend / Full-Stack Developer experienced with React, Next.js, TypeScript, and Node.js.';
+const siteTitle = 'Togar Anthony Mario Sianturi — Software Engineer | Full-Stack Web Developer';
+const siteDescription = 'Portfolio of Togar Anthony Mario Sianturi, a Computer Engineering graduate and Software Engineer building responsive, full-stack web applications with React, Next.js, TypeScript, REST APIs, and MySQL.';
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Togar Anthony Mario Sianturi',
+  givenName: 'Togar Anthony Mario',
+  familyName: 'Sianturi',
+  jobTitle: 'Software Engineer',
+  description: siteDescription,
+  url: siteUrl,
+  image: `${siteUrl}/opengraph-image/`,
+  email: 'mailto:19mariosianturi@gmail.com',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Jakarta',
+    addressCountry: 'ID',
+  },
+  alumniOf: {
+    '@type': 'CollegeOrUniversity',
+    name: 'Diponegoro University',
+  },
+  knowsAbout: [
+    'React',
+    'Next.js',
+    'TypeScript',
+    'REST API Integration',
+    'MySQL',
+    'Frontend Development',
+    'Full-Stack Development',
+  ],
+  sameAs: [
+    'https://github.com/mariosianturi19',
+    'https://www.linkedin.com/in/togar-anthony-mario-sianturi/',
+  ],
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -27,7 +62,7 @@ export const metadata: Metadata = {
     template: '%s | Mario Sianturi',
   },
   description: siteDescription,
-  keywords: ['Mario Sianturi', 'Frontend Developer', 'Full-Stack Developer', 'IT Developer', 'Next.js', 'React', 'TypeScript', 'Node.js', 'Portfolio'],
+  keywords: ['Togar Anthony Mario Sianturi', 'Software Engineer', 'Full-Stack Developer', 'Frontend Developer', 'React', 'Next.js', 'TypeScript', 'REST API', 'MySQL', 'Portfolio'],
   authors: [{ name: 'Togar Anthony Mario Sianturi' }],
   creator: 'Togar Anthony Mario Sianturi',
   publisher: 'Togar Anthony Mario Sianturi',
@@ -53,7 +88,7 @@ export const metadata: Metadata = {
         url: '/opengraph-image/',
         width: 1200,
         height: 630,
-        alt: 'Mario Sianturi — Frontend and Full-Stack Developer portfolio',
+        alt: 'Togar Anthony Mario Sianturi — Software Engineer and Full-Stack Web Developer portfolio',
       },
     ],
   },
@@ -83,6 +118,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        />
+      </head>
       <body className={`${interTight.variable} ${syne.variable} ${jetbrainsMono.variable} font-sans selection:bg-primary selection:text-primary-foreground`}>
 
         <a href="#main-content" className="skip-to-main">

@@ -2,17 +2,17 @@
 
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
+import { projectsData } from "@/data/projects"
 
 const EASE = [0.16, 1, 0.3, 1] as const
 const CURTAIN_EASE = [0.76, 0, 0.24, 1] as const
 
-const FEATURED_WORK = [
-  "SIGAP UNDIP",
-  "OUTLET RECOGNITION",
-  "INTERNAL OPERATIONS",
-  "GASPOL SYSTEM",
-  "PREMIER LEAGUE",
-] as const
+// Sinkron dengan data/projects.ts: urutan caseStudyPriority di Projects.tsx
+const CASE_STUDY_PRIORITY = [4, 2, 12, 9, 3]
+const FEATURED_WORK = CASE_STUDY_PRIORITY
+  .map((id) => projectsData.find((p) => p.id === id)?.title.toUpperCase())
+  .filter(Boolean)
+  .slice(0, 5) as string[]
 
 type Phase = "index" | "mark" | "exit" | "hidden"
 
@@ -231,7 +231,7 @@ export default function Preloader() {
                 animate={{ opacity: showingMark ? 1 : 0, y: showingMark ? 0 : 6 }}
                 transition={{ duration: 0.32, delay: showingMark ? 0.12 : 0 }}
               >
-                Frontend / Full-Stack Developer
+                Software Engineer / Full-Stack Developer
               </motion.p>
             </div>
           </motion.div>
@@ -243,7 +243,7 @@ export default function Preloader() {
           animate={{ opacity: showingIndex ? 1 : 0, y: showingIndex ? 0 : 6 }}
           transition={{ duration: 0.42, delay: 0.16, ease: EASE }}
         >
-          <span>Frontend / Full-Stack</span>
+          <span>Software Engineer / Full-Stack</span>
           <span className="text-right">Jakarta, ID</span>
         </motion.footer>
       </motion.div>

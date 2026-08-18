@@ -1,20 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { ArrowUp, Eye, Github, Linkedin, Mail, MapPin } from "lucide-react"
+import { ArrowUp, Github, Linkedin, Mail, MapPin } from "lucide-react"
 import { motion } from "framer-motion"
 
 export default function Footer() {
-  const [visitorCount, setVisitorCount] = useState(0)
-
-  useEffect(() => {
-    const storedCount = localStorage.getItem("portfolioVisitorCount")
-    const count = storedCount ? Number.parseInt(storedCount, 10) : 0
-    const newCount = count + 1
-    localStorage.setItem("portfolioVisitorCount", newCount.toString())
-    setVisitorCount(newCount)
-  }, [])
-
   const currentYear = new Date().getFullYear()
 
   return (
@@ -25,7 +14,7 @@ export default function Footer() {
             <h2 className="mb-4 break-words font-display text-xl font-extrabold tracking-tight sm:text-2xl">
               <a href="#home">MARIO<span className="text-primary">.</span>SIANTURI</a>
             </h2>
-            <p className="mb-8 max-w-sm text-base font-light leading-relaxed text-muted-foreground">Frontend and Full-Stack Developer building responsive web applications around real operational workflows.</p>
+            <p className="mb-8 max-w-sm text-base font-light leading-relaxed text-muted-foreground">Software Engineer building responsive, full-stack web applications around real operational workflows.</p>
             <p className="inline-flex max-w-full items-start gap-3 font-mono text-[10px] uppercase leading-5 tracking-[0.1em] text-muted-foreground sm:items-center sm:text-[11px] sm:tracking-[0.12em]">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
@@ -99,7 +88,6 @@ export default function Footer() {
         <div className="container-custom flex flex-col items-center justify-between gap-4 py-6 text-center font-mono text-[10px] uppercase leading-5 tracking-[0.1em] text-muted-foreground sm:py-7 sm:text-[11px] sm:tracking-[0.12em] md:flex-row md:text-left">
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
             <p>© {currentYear} Mario Sianturi</p>
-            <span className="inline-flex items-center gap-1.5"><Eye className="h-3.5 w-3.5 text-primary/70" />{visitorCount.toLocaleString()} visits</span>
           </div>
           <span className="inline-flex items-center gap-2"><MapPin className="h-3.5 w-3.5 text-primary/70" />Jakarta, Indonesia</span>
         </div>

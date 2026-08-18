@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/server';
 
 export const runtime = 'edge';
 
-export const alt = 'Mario Sianturi — Frontend and Full-Stack Developer portfolio';
+export const alt = 'Mario Sianturi — Software Engineer and Full-Stack Web Developer portfolio';
 export const size = {
   width: 1200,
   height: 630,
@@ -66,7 +66,7 @@ export default function OpenGraphImage() {
                 letterSpacing: 1.5,
               }}
             >
-              OPEN TO DEVELOPER ROLES
+              OPEN TO SOFTWARE ENGINEER ROLES
             </div>
           </div>
 
@@ -75,9 +75,11 @@ export default function OpenGraphImage() {
               COMPUTER ENGINEERING GRADUATE
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', fontSize: 76, fontWeight: 900, letterSpacing: -3, lineHeight: 1.02, textTransform: 'uppercase' }}>
-              <div style={{ display: 'flex' }}>Frontend &amp;</div>
-              <div style={{ display: 'flex', color: 'transparent', WebkitTextStroke: '1.5px #EDEDF2' }}>Full-Stack</div>
-              <div style={{ display: 'flex' }}>Developer</div>
+              <div style={{ display: 'flex' }}>Software</div>
+              <div style={{ display: 'flex', color: 'transparent', WebkitTextStroke: '1.5px #EDEDF2' }}>Engineer</div>
+            </div>
+            <div style={{ display: 'flex', fontSize: 30, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase' }}>
+              Full-Stack Web Developer
             </div>
           </div>
 
@@ -91,7 +93,7 @@ export default function OpenGraphImage() {
             }}
           >
             <div style={{ display: 'flex', color: '#8B8B99', fontSize: 15, letterSpacing: 2 }}>
-              REACT&nbsp;&nbsp;/&nbsp;&nbsp;NEXT.JS&nbsp;&nbsp;/&nbsp;&nbsp;TYPESCRIPT&nbsp;&nbsp;/&nbsp;&nbsp;NODE.JS
+              REACT&nbsp;&nbsp;/&nbsp;&nbsp;NEXT.JS&nbsp;&nbsp;/&nbsp;&nbsp;TYPESCRIPT&nbsp;&nbsp;/&nbsp;&nbsp;REST API&nbsp;&nbsp;/&nbsp;&nbsp;MYSQL
             </div>
             <div style={{ display: 'flex', color: '#8B8B99', fontSize: 15 }}>
               mariosianturi.vercel.app

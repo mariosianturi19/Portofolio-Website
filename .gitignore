@@ -35,7 +35,9 @@ pnpm-debug.log*
 
 # local planning artifacts
 /DESIGN_SYSTEM.md
+/MEMORY.md
 /mockups/
+/docs/
 /.claude/
 
 # local editor settings
